@@ -1,0 +1,3483 @@
+{
+  "name": "Agente Redaccional 3.0",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "edb6f8bd-ab37-415d-80af-b95a6691ab86",
+              "leftValue": "={{ ($json.subject || '').toLowerCase() }}",
+              "rightValue": "np",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "f3e1b8a3-39f9-42f3-9fe5-e4417e5b5ac0",
+              "leftValue": "={{ ($json.subject || '').toLowerCase() }}",
+              "rightValue": "ndp",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "6946ecd5-521d-4714-bca4-4733a4ce572c",
+              "leftValue": "={{ ($json.subject || '').toLowerCase() }}",
+              "rightValue": "prensa",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "200d23d1-89fa-4f6b-94c2-e36f38cc2112",
+              "leftValue": "={{ ($json.subject || '').toLowerCase() }}",
+              "rightValue": "comunicado",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "577b364e-dd7b-4741-bd81-a2c1899808d9",
+              "leftValue": "={{ ($json.subject || '').toLowerCase() }}",
+              "rightValue": "media",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "aa53760f-a938-42e8-a5a2-e60bdc53a18d",
+              "leftValue": "={{ ($json.subject || '').toLowerCase() }}",
+              "rightValue": "press",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "2caf853e-8d7b-4c0c-bf18-97018bb174c9",
+              "leftValue": "={{ ($json.subject || '').toLowerCase() }}",
+              "rightValue": "articulo",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "4690f0af-d303-4e90-971f-6260d20a2c3e",
+              "leftValue": "={{ ($json.subject || '').toLowerCase() }}",
+              "rightValue": "artículo",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "64634c9f-13b8-4665-9528-21085b2a535d",
+              "leftValue": "={{ ($json.subject || '').toLowerCase() }}",
+              "rightValue": "entrevista",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        496
+      ],
+      "id": "fd37d97b-9a58-4672-8932-94c3f04b2c64",
+      "name": "IF — Asunto es contenido procesable"
+    },
+    {
+      "parameters": {
+        "content": "## 🔵 BLOQUE 1 — Entrada de emails y preprocesado de adjuntos ✅\nRecepción de emails desde Gmail y filtrado inicial de contenido procesable, con separación y clasificación de adjuntos.\n\n\nIncluye:\n- Lectura de correos\n- Descarga de adjuntos\n- Filtro por asunto (NP, NdP, artículo, entrevista, etc.)\n- Descarte de emails no relevantes\n- Split de adjuntos en items individuales\n- Identificación de documentos vs imágenes\n- Selección del documento principal a procesar\n- Identificación PDF / DOCX / DOC\n- Enrutamiento hacia el flujo de procesamiento",
+        "height": 800,
+        "width": 1504
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1680,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "a65a76b7-f120-472f-a817-dbf03e89d8fe",
+      "name": "Nota — Bloque 1: Entrada y preprocesado"
+    },
+    {
+      "parameters": {
+        "content": "## 🧠 BLOQUE 2 — Procesamiento de contenidos y adjuntos\nProcesamiento editorial del contenido mediante IA.\n\nIncluye:\n- Procesado estructurado de textos (con IA), archivos de texto e imágenes\n- Control de calidad\n",
+        "height": 1264,
+        "width": 1312
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "893c5a7e-a7c0-4753-aa17-78ab734f273e",
+      "name": "Nota — Bloque 2: Procesamiento con IA"
+    },
+    {
+      "parameters": {
+        "content": "## 🟢 BLOQUE 3 — Subida de contenidos y actualización final\nGestión de archivos y cierre del proceso.\n\nIncluye:\n- Creación del registro principal en Airtable con los datos procesados.\n- Subida de documentos e imágenes a Airtable\n- Actualización del estado del registro",
+        "height": 832,
+        "width": 2720
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1488,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "549f8e93-3c65-44d5-85eb-075ba02cb53a",
+      "name": "Nota — Bloque 3: Subida y cierre"
+    },
+    {
+      "parameters": {
+        "operation": "deleteFile",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('WORD — Convertir a Google Docs').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        912,
+        704
+      ],
+      "id": "aa2644c9-014b-4b58-8a4d-b51d1cf66db6",
+      "name": "Cleanup — Borrar Google Doc temporal",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1wA279XwHu14WAjk",
+          "name": "Google Drive - Jordi Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "resize",
+        "width": 1005,
+        "height": 475,
+        "options": {
+          "format": "webp"
+        }
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        1040
+      ],
+      "id": "ad2521fa-1130-40f9-8071-2a86f2e689cf",
+      "name": "Imagen — Redimensionar a 1005x475 WebP"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Creamos un array vacío donde acumularemos los nuevos items\nconst out = [];\n\n// Recorremos cada item de entrada (normalmente 1 email por ejecución)\nfor (const inItem of items) {\n\n  // Obtenemos todos los binarios del email (adjuntos)\n  // Si no existe la propiedad binary, usamos un objeto vacío\n  const binaries = inItem.binary ?? {};\n\n  // Recorremos cada adjunto del email\n  for (const [key, bin] of Object.entries(binaries)) {\n\n    // Por cada adjunto generamos un item independiente\n    out.push({\n      json: {\n        // Índice del email dentro de la ejecución (útil para debug)\n        sourceEmailIndex: inItem.$index,\n\n        // Nombre original de la key binaria (ej: attachment_0)\n        originalKey: key,\n\n        // Nombre del archivo adjunto\n        fileName: bin.fileName,\n\n        // Tipo MIME del archivo\n        mimeType: bin.mimeType,\n\n        // Tamaño del archivo\n        fileSize: bin.fileSize,\n\n        // Datos del email original que arrastramos para contexto\n        subject: inItem.json?.subject,\n        from: inItem.json?.from,\n        date: inItem.json?.date,\n\n        // ID del mensaje en Gmail\n        uid: inItem.json?.id,\n\n        // Message-ID del email\n        // Gmail simple=false: viene en json.headers[\"message-id\"]\n        messageId: inItem.json?.headers?.[\"message-id\"],\n      },\n\n      // Renombramos el adjunto a \"data\"\n      // para que los siguientes nodos lo puedan usar de forma estándar\n      binary: {\n        data: bin,\n      },\n    });\n  }\n}\n\n// Devolvemos un item por cada adjunto encontrado\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -944,
+        480
+      ],
+      "id": "e0cb838e-2606-4d29-b725-8c661c6b34e6",
+      "name": "Code — Separar adjuntos en ítems"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b98b43ca-4213-4a92-af85-324e3d0bbb11",
+              "leftValue": "={{ ($json.mimeType || '').toLowerCase() }}",
+              "rightValue": "application/pdf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "a37c86cc-310d-48fd-90d2-64e0c183610f",
+              "leftValue": "={{ ($json.mimeType || '').toLowerCase() }}",
+              "rightValue": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "18d392e8-5cfa-48d2-8dd4-b121a92e9128",
+              "leftValue": "={{ ($json.mimeType || '').toLowerCase() }}",
+              "rightValue": "application/msword",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -752,
+        480
+      ],
+      "id": "aa05b74e-2311-4a4d-b155-4b4674c8da56",
+      "name": "IF — Es documento (PDF/DOCX/DOC)"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1120,
+        688
+      ],
+      "id": "a5f0dea9-79f8-415a-87b1-46e13f1c8339",
+      "name": "STOP — Email no procesable"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ordenar poniendo PDFs primero\nconst sorted = items.sort((a, b) => {\n  const aIsPdf = (a.json.mimeType || '').includes('application/pdf');\n  const bIsPdf = (b.json.mimeType || '').includes('application/pdf');\n  if (aIsPdf && !bIsPdf) return -1;\n  if (!aIsPdf && bIsPdf) return 1;\n  return 0;\n});\n\n// Devolver solo el primero\nreturn [sorted[0]];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -544,
+        320
+      ],
+      "id": "aeb9986e-49ee-411b-aeae-eb9535c47275",
+      "name": "Code — Seleccionar primer documento válido"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ ($json.mimeType || '').toLowerCase() }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "9cc82b5b-ffa1-485a-a769-f0359b5a9cb2"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ ($json.mimeType || '').toLowerCase() }}",
+                    "rightValue": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "4618d7c4-c9a6-4d29-8960-af29e19ea4ec"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "DOCX"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ ($json.mimeType || '').toLowerCase() }}",
+                    "rightValue": "application/msword",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "767383aa-0540-4883-93b9-c1228e7735d8"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "DOC"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none",
+          "allMatchingOutputs": false
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        -352,
+        304
+      ],
+      "id": "a5301ff4-bf92-405f-b2be-7bb30e6e407c",
+      "name": "Switch — Tipo de documento"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        80,
+        224
+      ],
+      "id": "cd05eacf-c6d1-4228-83a3-ea7c126ffbc3",
+      "name": "PDF — Extraer texto"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.3-chat-latest",
+          "mode": "list",
+          "cachedResultName": "GPT-5.3-CHAT-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Eres un asistente experto en análisis y estructuración de contenido editorial para el medio Corresponsables, especializado en RSE, sostenibilidad y ESG.\n\nTu tarea es analizar un texto procedente de una nota de prensa, artículo o entrevista y extraer información estructurada de forma precisa, sin reinterpretar ni reescribir el contenido.\n\n## Objetivo\n\nDebes:\n\n1. Identificar el título original del documento\n2. Limpiar y estructurar el contenido principal en HTML\n3. Clasificar el contenido en diferentes dimensiones\n4. Identificar la empresa protagonista\n\nEste nodo debe comportarse como un extractor y estructurador fiel del contenido, no como un redactor creativo.\n\n---\n\n## Reglas generales\n\n- Devuelve únicamente un JSON válido\n- No añadas explicaciones ni texto fuera del JSON\n- No dejes campos vacíos\n- No inventes información\n- Si tienes dudas, aplica el criterio más prudente basado en el contenido\n- Copia el campo `text` del input sin modificarlo en el output\n\n---\n\n## 1. Extracción del título (`titulo`)\n\n- Debe ser exactamente el título original del documento\n- No lo reescribas, no lo optimices y no lo adaptes\n- No cambies su redacción, orden ni estilo\n- No lo conviertas en un titular periodístico\n- Debe ser el encabezado principal del documento\n- No incluyas subtítulos ni antetítulos\n- Este título NO debe aparecer dentro de `contenidoHTML`\n\n---\n\n## 2. Limpieza y maquetación (`contenidoHTML`)\n\nDebes extraer únicamente el cuerpo principal del contenido.\n\n### Debes eliminar, si lo hubiera:\n\n- título\n- highlights (lista de bullets que a veces hay debajo del título)\n- firmas\n- contactos\n- pies de página\n- disclaimers\n- contenido corporativo irrelevante\n- información administrativa\n\n### Una vez eliminado todo lo anterior, elimina también la línea de geolocalización y fecha si la hubiera al inicio del texto (ejemplo: \"Madrid, 13 de mayo de 2026.-\"). Es un patrón habitual en notas de prensa.\n\n---\n\n### Fidelidad al contenido (obligatoria)\n\n- No inventes información que no esté en el contenido original\n- No resumas, no reformules y no reescribas el contenido principal\n- Debes preservar la redacción original del documento siempre que sea posible\n- Tu función no es mejorar el estilo del texto, sino identificarlo, limpiarlo y estructurarlo\n- Solo puedes eliminar contenido claramente accesorio, administrativo o ajeno al cuerpo principal\n- Si tienes dudas sobre si una parte pertenece al cuerpo principal, consérvala\n- Si una información no es clara, no la fuerces ni la inventes\n- No introduzcas interpretaciones, matices o explicaciones que no estén presentes en el contenido\n- No combines frases, no simplifiques párrafos y no alteres el sentido del texto\n- No sustituyas palabras por sinónimos\n- No cambies el orden del contenido salvo que sea estrictamente necesario para maquetarlo correctamente en HTML\n- El contenido final debe ser lo más fiel posible al documento original\n\n---\n\n### Reglas de maquetación HTML\n\n- Usa <p> para estructurar párrafos\n- No generes <h1> ni <h2>\n- Usa <h3> solo si ya existen encabezamientos en el contenido original\n- No inventes subtítulos ni encabezados\n- No incluyas el título dentro del HTML\n- No uses listas ni bullet points. Si los hubiera en el contenido original, usa este símbolo ●\n- Convierte enlaces y emails a HTML solo si aparecen en el contenido original\n- Usa cursivas (<i></i>) para las declaraciones\n- Mantén las negritas del texto original, si las hubiera, y si no las hubiera añádelas con estilo periodístico\n\n---\n\n### Calidad técnica del HTML (obligatoria)\n\n- No generes HTML inválido\n- No generes etiquetas HTML incompletas o mal cerradas\n- Asegúrate de que el HTML sea limpio, legible y consistente\n- No introduzcas elementos HTML innecesarios\n- No añadas elementos decorativos o superfluos\n- No añadas enlaces, énfasis o elementos que no existan o no estén justificados por el contenido\n\n---\n\n## 3. Clasificación editorial (`categoriaNAE`)\n\nValores posibles:\n\n- Noticias\n- Opinión\n- Entrevistas\n\nReglas:\n\n- Noticias → contenido informativo y factual\n- Opinión → contenido interpretativo o reflexivo\n- Entrevistas → formato preguntas/respuestas\n- En caso de duda → Noticias\n\n---\n\n## 4. Clasificación ESG (`categoriaESG`)\n\nValores:\n\n- Medioambiente\n- Social\n- Buen gobierno\n\nReglas:\n\n- Selecciona SOLO una categoría\n- Basada en el impacto principal del contenido\n- Prioriza el foco dominante frente a menciones secundarias\n\n---\n\n## 5. Clasificación ODS (`categoriaODS`)\n\nDebes usar EXACTAMENTE uno de los siguientes valores:\n\n- ODS 1 Fin de la pobreza\n- ODS 2 Hambre cero\n- ODS 3 Salud y bienestar\n- ODS 4 Educación de calidad\n- ODS 5 Igualdad de género\n- ODS 6 Agua limpia y saneamiento\n- ODS 7 Energía asequible y no contaminante\n- ODS 8 Trabajo decente y crecimiento económico\n- ODS 9 Industria, innovación e infraestructura\n- ODS 10 Reducción de las desigualdades\n- ODS 11 Ciudades y comunidades sostenibles\n- ODS 12 Producción y consumo responsables\n- ODS 13 Acción por el clima\n- ODS 14 Vida submarina\n- ODS 15 Vida de ecosistemas terrestres\n- ODS 16 Paz, justicia e instituciones sólidas\n- ODS 17 Alianzas para lograr los objetivos\n\n### Reglas\n\n- Selecciona SOLO uno\n- No modifiques el texto\n- No abrevies\n- No elimines palabras\n- No cambies el orden\n- No selecciones múltiples ODS\n\n---\n\n## 6. Empresa (`empresa`)\n\n- Debe ser la organización más protagonista del contenido\n- Identifica la entidad principal sobre la que trata la noticia\n- No utilices el remitente del email como referencia\n- No incluyas organizaciones secundarias o mencionadas de forma accesoria\n- Si hay varias organizaciones, selecciona la que tenga mayor protagonismo\n- Devuelve solo el nombre de la organización, sin descripciones adicionales\n- Si el contenido trata sobre una iniciativa impulsada por una organización concreta, esa organización debe ser considerada la principal\n\n---\n\n## 7. Clasificación de país (`pais`)\n\nValores:\n\n- España\n- Argentina\n- Chile\n- Colombia\n- Ecuador\n- México\n- Perú\n- Internacional\n\nReglas:\n\n- Identifica el país por contexto, instituciones o referencias\n- Si no hay evidencia clara → España\n- Usa Internacional solo si el contenido es claramente global o multinacional\n- No uses el idioma como único criterio\n\n\n---\n\n## OUTPUT\n\n{\n  \"titulo\": \"...\",\n  \"contenidoHTML\": \"...\",\n  \"categoriaNAE\": \"...\",\n  \"categoriaESG\": \"...\",\n  \"categoriaODS\": \"...\",\n  \"empresa\": \"...\",\n  \"pais\": \"...\",\n  \"text\": \"...\",\n}",
+              "role": "system"
+            },
+            {
+              "content": "=Analiza el siguiente contenido y genera el JSON solicitado siguiendo estrictamente las instrucciones del system prompt.\n\nContenido:\n\n{{ $json.text }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        336,
+        224
+      ],
+      "id": "ac3746af-e24c-466a-917c-2386ec97b22e",
+      "name": "AI — Extraer y clasificar contenido",
+      "credentials": {
+        "openAiApi": {
+          "id": "T0AKp7Yll9ff7up8",
+          "name": "OpenAi - Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.3-chat-latest",
+          "mode": "list",
+          "cachedResultName": "GPT-5.3-CHAT-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Eres un asistente especializado en control de calidad editorial para el medio Corresponsables.\n\nTu función es doble:\n1. Puntuar la fidelidad del contenido HTML respecto al texto original\n2. Validar la empresa protagonista del contenido\n\nNO debes generar contenido nuevo ni reescribir el texto.\n\n---\n\n## Reglas generales\n\n- Devuelve únicamente un JSON válido\n- No añadas explicaciones fuera del JSON\n- No inventes información\n- Todas las decisiones deben basarse únicamente en el contenido proporcionado\n\n---\n\n## 1. Puntuación de fidelidad (`fidelidadScore`)\n\nCompara el `contenidoHTML` con el `texto original` y asigna una puntuación del 0 al 100:\n\n- 90-100 → contenido prácticamente idéntico, solo cambios de formato\n- 70-89 → pequeñas modificaciones sin cambiar el sentido\n- 50-69 → modificaciones relevantes o pérdida de información\n- 0-49 → cambios de significado, omisiones importantes o alteraciones graves\n\nDebes comparar únicamente el cuerpo principal del contenido, pero ignorando:\n- título\n- firmas\n- contactos\n- pies de página\n- disclaimers\n- contenido corporativo irrelevante\n- información administrativa\n- línea de geolocalización y fecha si la hubiera al inicio del texto (ejemplo: \"Madrid, 13 de mayo de 2026.-\"). Es un patrón habitual en notas de prensa.\n- negritas y cursivas que no importa si no coinciden\n\n---\n\n## 2. Motivo de revisión (`fidelidadMotivo`)\n\n- Si fidelidadScore >= 70 → devolver string vacío \"\"\n- Si fidelidadScore < 70 → explicar brevemente el motivo de ese score\n\nEjemplos:\n- \"Se han omitido párrafos relevantes del contenido original\"\n- \"Se han modificado datos o cifras del contenido original\"\n- \"El contenido ha sido resumido perdiendo información importante\"\n\n---\n\n## 3. Validación de empresa (`empresaValidada`)\n\nRecibirás un valor previo `empresa`. Debes comprobar si coincide con la organización protagonista del contenido.\n\n### Reglas de decisión\n\n- Si la empresa es claramente la protagonista principal → mantenerla\n- Si hay otra organización claramente protagonista → reemplazarla por esa\n- Si hay varias organizaciones sin una claramente dominante → mantener la original\n\n---\n\n## OUTPUT (obligatorio)\n\n{\n  \"empresaValidada\": \"...\",\n  \"contenidoHTML\": \"...\",\n  \"fidelidadScore\": \"\",\n  \"fidelidadMotivo\": \"\",\n  \"titulo\": \"...\",\n  \"categoriaNAE\": \"...\",\n  \"categoriaESG\": \"...\",\n  \"categoriaODS\": \"...\",\n  \"pais\": \"...\"\n}",
+              "role": "system"
+            },
+            {
+              "content": "=Valida la siguiente información siguiendo estrictamente las instrucciones del system prompt.\nNo añadas texto fuera del JSON.\n\nTexto original:\n{{ $json.message.content.text }}\n\nDatos estructurados:\n- Título: {{ $json.message.content.titulo }}\n- Contenido HTML: {{ $json.message.content.contenidoHTML }}\n- Empresa: {{ $json.message.content.empresa }}\n- Categoría NAE: {{ $json.message.content.categoriaNAE }}\n- Categoría ESG: {{ $json.message.content.categoriaESG }}\n- Categoría ODS: {{ $json.message.content.categoriaODS }}\n- País: {{ $json.message.content.pais }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        672,
+        224
+      ],
+      "id": "6d584769-a6a2-4b21-bb93-8b174f1056e2",
+      "name": "AI — Validar fidelidad y empresa",
+      "credentials": {
+        "openAiApi": {
+          "id": "T0AKp7Yll9ff7up8",
+          "name": "OpenAi - Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.3-chat-latest",
+          "mode": "list",
+          "cachedResultName": "GPT-5.3-CHAT-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Eres un asistente experto en redacción periodística de Corresponsables, medio especializado en RSE, sostenibilidad, ESG y comunicación responsable.\n\nTu tarea es generar contenido editorial y metadatos SEO a partir de contenido previamente estructurado y validado.\n\nDebes redactar con criterio periodístico, enfoque ESG y coherencia editorial, sin inventar información.\n\n---\n\n## Contexto de entrada\n\nRecibirás:\n\n- titulo → título original del documento\n- contenidoHTMLValidado → contenido limpio y fiel al original\n- empresaValidada → organización protagonista confirmada\n- categoriaNAE, categoriaESG, categoriaODS, pais\n\nDebes usar estos datos como única fuente de verdad.\n\n---\n\n## Objetivo\n\nGenerar:\n\n- tituloESG\n- subtitulo\n- descripcion\n- slug\n- extracto\n- highlights\n- etiquetas\n\n---\n\n## Reglas generales\n\n### Formato\n\n- Devuelve únicamente un JSON válido\n- No añadas explicaciones, comentarios ni texto fuera del JSON\n- No dejes campos vacíos ni incompletos\n- No incluyas caracteres inválidos que puedan romper el JSON\n- Si necesitas comillas dentro del contenido generado, usa comillas simples\n- Asegúrate de que el JSON es correcto, completo y sin errores de sintaxis\n\n### Uso del contenido\n\n- Basa TODO en `contenidoHTMLValidado` y `titulo`\n- No inventes información\n- No introduzcas datos no presentes en el contenido\n- No contradigas el contenido original\n\n### Coherencia\n\n- Todos los campos deben ser coherentes entre sí\n- Evita duplicar información\n- evita repetir estructuras sintácticas similares entre campos (especialmente entre tituloESG, subtitulo y descripcion)\n- Cada campo debe aportar valor propio y complementario\n\n---\n\n## Estilo Corresponsables\n\n- Tono periodístico, informativo, profesional y creíble\n- Prioriza claridad, precisión y relevancia informativa\n- Lenguaje claro, preciso y sin exageraciones\n- Sin tono promocional ni publicitario\n- Sin clickbait ni polarización\n- Prioriza impacto ESG\n- Destaca valor e impacto de la acción, no solo la acción\n\n---\n\n## 1. tituloESG\n\n- Reescribe el título original con un enfoque ESG claro\n- Debe reflejar el impacto real (social, ambiental o de gobernanza)\n- Prioriza el resultado o efecto sobre la acción corporativa\n- incluir dato cuantitativo si está disponible (porcentaje, volumen, impacto medible)\n- Debe responder a la pregunta: “¿qué cambia o qué impacto genera esto?”\n- Lenguaje profesional, activo y periodístico\n- Sin clickbait\n- No inventar información\n- No exagerar ni añadir interpretaciones no presentes en el contenido\n\n### Estructura recomendada\n\n- priorizar impacto + contexto sobre anuncio\n- puede invertir el orden del título original si mejora claridad\n- evitar comenzar siempre con el nombre de la empresa si no es necesario\n\nEjemplo estructura:\nimpacto + dato/contexto + empresa\n\no\n\nempresa + impacto + contexto\n\n\n### Calidad\n\n- debe poder leerse como un titular periodístico real\n- debe ser informativo, no promocional\n- debe aportar un ángulo editorial (no solo describir la acción)\n- debe ser claro en una sola lectura\n- longitud moderada (ideal entre 10 y 18 palabras)\n- No repetir el título original con ligeros cambios\n- No mantener estructura corporativa típica\n- Sin frases genéricas sin dato o contexto\n- No añadir información no presente en el contenido\n\n### Reglas editoriales (muy importante)\n\n- evitar lenguaje corporativo vacío:\n  (compromiso, apuesta, liderazgo… sin contexto real)\n- evitar verbos débiles:\n  (refuerza, impulsa, apuesta por… si no aportan valor real)\n- priorizar verbos concretos:\n  (reduce, aumenta, certifica, alcanza, mejora, transforma…)\n\n- evitar estructuras tipo:\n  “Empresa X lanza…”\n  → reformular hacia impacto\n\n### Ejemplos\n\nEjemplo 1  \nInput: Zurich Seguros lanza Elite Empresas en la Market Week  \nOutput: Zurich impulsa la resiliencia empresarial con su nuevo programa Elite Empresas en la Market Week  \n\nEjemplo 2  \nInput: Cesce refuerza su compromiso con la financiación sostenible, alcanzando el 38% de su cartera garantizada  \nOutput: La financiación sostenible ya representa el 38% de la cartera de Cesce, consolidando su liderazgo verde en España  \n\nEjemplo 3  \nInput: Renfe obtiene certificación AENOR de huella de carbono y refuerza su compromiso sostenible  \nOutput: Renfe certifica su huella de carbono y acelera su plan hacia la neutralidad climática    \n\n\n### SI SE TRATA DE UNA ENTREVISTA deberá ser una declaración relevante y periodística de la entrevista\n\n### SI SE TRATA DE UN ARTÍCULO DE OPINIÓN deberá ser el mismo título original o bien generar uno en base al contenido del mismo\n\n---\n\n## 2. subtitulo\n\n- debe complementar el `tituloESG`, no repetirlo\n- añade contexto relevante que no esté explícito en el título\n- debe aportar información concreta (qué, cómo, dónde o por qué)\n\n### Estructura recomendada\n\n- ampliar el alcance de la acción\n- añadir contexto geográfico, sectorial o temporal si es relevante\n- concretar impacto, alcance o beneficiarios\n\nEjemplo estructura:\ncontexto + alcance + impacto\n\n### Calidad\n\n- breve (ideal entre 12 y 25 palabras)\n- claro y específico\n- fácil de entender en una sola lectura\n- coherente con el contenido real\n- tono periodístico, no promocional\n- no usar lenguaje corporativo vacío (compromiso, apuesta… sin contexto)\n- no repetir palabras clave exactas del título salvo que sea necesario\n- no reformular el título con sinónimos\n- Evitar repetir el título\n- Evitar generalidades sin información concreta\n- Evitar frases decorativas o vacías\n- Evitar enumeraciones largas\n\n### Ejemplo\n\nTítulo ESG:\nIberdrola acelera la transición energética con nuevas inversiones renovables\n\nSubtítulo esperado:\nLa compañía refuerza su capacidad eólica y solar en España y Portugal para impulsar la descarbonización del sistema energético\n\n\n### SI SE TRATA DE UNA ENTREVISTA deberá seguir este formato (Entrevista en exclusiva para Corresponsables a [Nombre y Apellidos], [Cargo] de [Nombre de la empresa])\n\n### SI SE TRATA DE UN ARTÍCULO DE OPINIÓN deberá seguir este formato (Artículo en exclusiva para Corresponsables de [Nombre y Apellidos], [Cargo] de [Nombre de la empresa])\n\n---\n\n## 3. descripcion\n\n- máximo 160 caracteres (ideal entre 140–155)\n- tono periodístico, claro y preciso\n- debe resumir el hecho principal de la noticia\n- incluir la empresa protagonista si aporta valor\n- describir la acción principal\n- añadir contexto o impacto relevante\n\n### Calidad\n\n- Entendible de forma autónoma (sin necesidad de leer el artículo)\n- Informativa y específica, no genérica\n- Invitar al clic de forma natural, sin clickbait\n- Aportar valor real al lector\n- Evitar lenguaje promocional o corporativo\n- Evitar frases vacías (compromiso, apuesta, liderazgo… sin contexto)\n- Evitar expresiones tipo ‘descubre’, ‘no te pierdas’, etc.\n- Evitar repetir el título tal cual\n\n### Reglas SEO\n\n- incluir palabras clave relevantes del contenido\n- evitar repeticiones innecesarias\n- evitar palabras vacías o genéricas\n- coherente con `titulo` y `slug`\n- evitar empezar siempre por el nombre de la empresa si no aporta valor\n\nEjemplo estructura:\nempresa + accion + impacto/contexto\n\n### Ejemplo\n\nInput:\nVegalsa-Eroski y sus clientes donan más de 122.000 kilos de alimentos\n\nDescripción esperada:\nVegalsa-Eroski impulsa la donación de más de 122.000 kilos de alimentos a bancos alimentarios en Galicia\n\n---\n\n## 4. slug\n\n- Basado en las palabras clave principales del contenido\n- Debe reflejar el tema central de la noticia\n- Coherente con `titulo` y `contenidoHTMLValidado`\n- Prioriza claridad y relevancia SEO frente a literalidad del texto original\n\n### Reglas\n\n- De 5 a 10 palabras, en minúsculas y separadas con guiones\n- Sin tildes ni caracteres especiales\n- Sin fechas salvo que sean clave\n- Sin palabras vacías innecesarias (de, la, el, en, etc.)\n- Sin repetir palabras ni raíces similares\n- Evitar duplicidad semántica (ej: sostenible-sostenibilidad)\n- Sin términos genéricos sin valor (empresa, proyecto, iniciativa)\n- Sin inventar información\n\n### Calidad\n\n- Entendible por sí solo como una URL clara y descriptiva\n- Legible por humanos (no solo optimizado para SEO)\n- Específico, no genérico\n- Reflejar el contenido real, no una interpretación\n\n### Estructura recomendada\n\n- Incluir la empresa protagonista si aporta valor SEO\n- Incluir acción principal + contexto o impacto\n\nEjemplo estructura:\nempresa + accion + tema + contexto\n\n### Ejemplo\n\nInput:\nVegalsa-Eroski y sus clientes donan más de 122.000 kilos de alimentos\n\nSlug esperado:\nvegalsa-eroski-donacion-alimentos-bancos-galicia\n\n---\n\n## 5. extracto\n\n- 3 párrafos cortos\n- cada párrafo de 3-5 líneas aproximadas\n- separados por <br><br>\n- máximo ~15 líneas en total\n\n---\n\n## 6. highlights\n\nGenera exactamente 3:\n\n\"highlights\": \"highlight1 | highlight12 | highlight3\"\n\n\nReglas:\n- sin punto final\n- breves (aproximadamente 10-20 palabras), claros y útiles\n- debe resumir ideas clave del contenido\n- añade un emoji relacionado al inicio de cada uno\n\n---\n\n## 7. etiquetas\n\nGenera exactamente 8 etiquetas\n\nReglas:\n- deben ser strings simples\n- incluir obligatoriamente:\n  - empresaValidada\n  - RSE\n  - ESG\n  - ODS\n  - sostenibilidad\n- resto relevantes\n- incluir al menos una etiqueta temática específica del contenido (ej: energía renovable, inclusión laboral, economía circular)\n- sin duplicados\n\n--- \n\n## 8. resto de outputs\n\nDéjalos exactamente cómo los has recibido en el input:\n\n  \"categoriaNAE\": \"...\",\n  \"categoriaESG\": \"...\",\n  \"categoriaODS\": \"...\",\n  \"empresaValidada\": \"...\",\n  \"pais\": \"...\",\n  \"fidelidadScore\": \"\",\n  \"fidelidadMotivo\": \"\"\n\n---\n\n## OUTPUT FINAL\n\n{\n  \"titulo\": \"...\",\n  \"tituloESG\": \"...\",\n  \"subtitulo\": \"...\",\n  \"slug\": \"...\",\n  \"highlights\": \"Punto destacado 1 | Punto destacado 2 | Punto destacado 3\",\n  \"contenidoHTML\": \"...\",\n  \"extracto\": \"...\",\n  \"descripcion\": \"...\",\n   \"etiquetas\": \"etiqueta1 | etiqueta2 | etiqueta3 | etiqueta4 | etiqueta5 | etiqueta6 | etiqueta7 | etiqueta8\",\n  \"categoriaNAE\": \"...\",\n  \"categoriaESG\": \"...\",\n  \"categoriaODS\": \"...\",\n  \"empresaValidada\": \"...\",\n  \"pais\": \"...\",\n  \"fidelidadScore\": \"\",\n  \"fidelidadMotivo\": \"\"\n}",
+              "role": "system"
+            },
+            {
+              "content": "=Genera el JSON solicitado siguiendo estrictamente las instrucciones del system prompt.\nNo añadas texto fuera del JSON.\n\nDatos:\n- Título original: {{ $json.message.content.titulo }}\n- Contenido HTML: {{ $json.message.content.contenidoHTML }}\n- Empresa: {{ $json.message.content.empresaValidada }}\n- Categoría NAE: {{ $json.message.content.categoriaNAE }}\n- Categoría ESG: {{ $json.message.content.categoriaESG }}\n- Categoría ODS: {{ $json.message.content.categoriaODS }}\n- País: {{ $json.message.content.pais }}\n- fidelidadScore: {{ $json.message.content.fidelidadScore }}\n- fidelidadMotivo: {{ $json.message.content.fidelidadMotivo }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1008,
+        224
+      ],
+      "id": "155c8501-588d-4538-a3a3-bd860b8caf50",
+      "name": "AI — Generar SEO y metadatos",
+      "credentials": {
+        "openAiApi": {
+          "id": "T0AKp7Yll9ff7up8",
+          "name": "OpenAi - Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "app5FkIV6cTNWoFeo",
+          "mode": "list",
+          "cachedResultName": "CMS Wordpress",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblVkszOGc9BXmwug",
+          "mode": "list",
+          "cachedResultName": "Publicaciones",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo/tblVkszOGc9BXmwug"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Asunto email": "={{ $('Gmail — Trigger Carpeta \\'Publicar\\'').item.json.subject }}",
+            "Origin": "={{ $('Gmail — Trigger Carpeta \\'Publicar\\'').item.json.from.text }}",
+            "Slug": "={{ $json.message.content.slug }}",
+            "Description": "={{ $json.message.content.descripcion }}",
+            "Clean HTML": "={{ $('Gmail — Trigger Carpeta \\'Publicar\\'').item.json.html }}",
+            "Contenido MD": "={{ $('Gmail — Trigger Carpeta \\'Publicar\\'').item.json.text }}",
+            "Estado": "🔁 Guardando Email",
+            "Empresa": "={{ $json.message.content.empresaValidada }}",
+            "Título periodístico": "={{ $json.message.content.tituloESG }}",
+            "Etiquetas": "={{ $json.message.content.etiquetas }}",
+            "Extracto": "={{ $json.message.content.extracto }}",
+            "Highlights": "={{ $json.message.content.highlights }}",
+            "Cuerpo del contenido en HTML": "={{ $json.message.content.contenidoHTML }}",
+            "Subtítulo": "={{ $json.message.content.subtitulo }}",
+            "Categoría ODS": "={{ $json.message.content.categoriaODS}}",
+            "Categoría ESG": "={{ $json.message.content.categoriaESG }}",
+            "País": "={{ $json.message.content.pais}}",
+            "Categoría NAE": "={{ $json.message.content.categoriaNAE}}",
+            "Motivo revisión": "={{ $json.message.content.fidelidadMotivo }}",
+            "Fidelidad Score": "={{ $json.message.content.fidelidadScore }}",
+            "Título": "={{ $json.message.content.titulo }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Asunto email",
+              "displayName": "Asunto email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aprobación",
+              "displayName": "Aprobación",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "❌ Cancelado",
+                  "value": "❌ Cancelado"
+                },
+                {
+                  "name": "🔁 Guardando Email",
+                  "value": "🔁 Guardando Email"
+                },
+                {
+                  "name": "🔎 En Revisión",
+                  "value": "🔎 En Revisión"
+                },
+                {
+                  "name": "✋🏼 Procesando",
+                  "value": "✋🏼 Procesando"
+                },
+                {
+                  "name": "✅ Borrador WP Creado",
+                  "value": "✅ Borrador WP Creado"
+                },
+                {
+                  "name": "✅ Publicado",
+                  "value": "✅ Publicado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Empresa",
+              "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Documento",
+              "displayName": "Documento",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Imagen",
+              "displayName": "Imagen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Título",
+              "displayName": "Título",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Título periodístico",
+              "displayName": "Título periodístico",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Subtítulo",
+              "displayName": "Subtítulo",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Extracto",
+              "displayName": "Extracto",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Etiquetas",
+              "displayName": "Etiquetas",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Highlights",
+              "displayName": "Highlights",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Origin",
+              "displayName": "Origin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Cuerpo del contenido en HTML",
+              "displayName": "Cuerpo del contenido en HTML",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fecha de creación",
+              "displayName": "Fecha de creación",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Categoria/s",
+              "displayName": "Categoria/s",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "options": [
+                {
+                  "name": "Noticias",
+                  "value": "Noticias"
+                },
+                {
+                  "name": "Social",
+                  "value": "Social"
+                },
+                {
+                  "name": "Medioambiente",
+                  "value": "Medioambiente"
+                },
+                {
+                  "name": "Buen Gobierno",
+                  "value": "Buen Gobierno"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Clean HTML",
+              "displayName": "Clean HTML",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Contenido MD",
+              "displayName": "Contenido MD",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría NAE",
+              "displayName": "Categoría NAE",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Noticias",
+                  "value": "Noticias"
+                },
+                {
+                  "name": "Opinión",
+                  "value": "Opinión"
+                },
+                {
+                  "name": "Entrevistas",
+                  "value": "Entrevistas"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría ESG",
+              "displayName": "Categoría ESG",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Medioambiente",
+                  "value": "Medioambiente"
+                },
+                {
+                  "name": "Social",
+                  "value": "Social"
+                },
+                {
+                  "name": "Buen gobierno",
+                  "value": "Buen gobierno"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría ODS",
+              "displayName": "Categoría ODS",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "ODS 1 Fin de la pobreza",
+                  "value": "ODS 1 Fin de la pobreza"
+                },
+                {
+                  "name": "ODS 2 Hambre cero",
+                  "value": "ODS 2 Hambre cero"
+                },
+                {
+                  "name": "ODS 3 Salud y bienestar",
+                  "value": "ODS 3 Salud y bienestar"
+                },
+                {
+                  "name": "ODS 4 Educación de calidad",
+                  "value": "ODS 4 Educación de calidad"
+                },
+                {
+                  "name": "ODS 5 Igualdad de género",
+                  "value": "ODS 5 Igualdad de género"
+                },
+                {
+                  "name": "ODS 6 Agua limpia y saneamiento",
+                  "value": "ODS 6 Agua limpia y saneamiento"
+                },
+                {
+                  "name": "ODS 7 Energía asequible y no contaminante",
+                  "value": "ODS 7 Energía asequible y no contaminante"
+                },
+                {
+                  "name": "ODS 8 Trabajo decente y crecimiento económico",
+                  "value": "ODS 8 Trabajo decente y crecimiento económico"
+                },
+                {
+                  "name": "ODS 9 Industria, innovación e infraestructura",
+                  "value": "ODS 9 Industria, innovación e infraestructura"
+                },
+                {
+                  "name": "ODS 10 Reducción de las desigualdades",
+                  "value": "ODS 10 Reducción de las desigualdades"
+                },
+                {
+                  "name": "ODS 11 Ciudades y comunidades sostenibles",
+                  "value": "ODS 11 Ciudades y comunidades sostenibles"
+                },
+                {
+                  "name": "ODS 12 Producción y consumo responsables",
+                  "value": "ODS 12 Producción y consumo responsables"
+                },
+                {
+                  "name": "ODS 13 Acción por el clima",
+                  "value": "ODS 13 Acción por el clima"
+                },
+                {
+                  "name": "ODS 14 Vida submarina",
+                  "value": "ODS 14 Vida submarina"
+                },
+                {
+                  "name": "ODS 15 Vida de ecosistemas terrestres",
+                  "value": "ODS 15 Vida de ecosistemas terrestres"
+                },
+                {
+                  "name": "ODS 16 Paz, justicia e instituciones sólidas",
+                  "value": "ODS 16 Paz, justicia e instituciones sólidas"
+                },
+                {
+                  "name": "ODS 17 Alianzas para lograr los objetivos",
+                  "value": "ODS 17 Alianzas para lograr los objetivos"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "País",
+              "displayName": "País",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "España",
+                  "value": "España"
+                },
+                {
+                  "name": "Argentina",
+                  "value": "Argentina"
+                },
+                {
+                  "name": "Chile",
+                  "value": "Chile"
+                },
+                {
+                  "name": "Colombia",
+                  "value": "Colombia"
+                },
+                {
+                  "name": "Ecuador",
+                  "value": "Ecuador"
+                },
+                {
+                  "name": "México",
+                  "value": "México"
+                },
+                {
+                  "name": "Perú",
+                  "value": "Perú"
+                },
+                {
+                  "name": "Internacional",
+                  "value": "Internacional"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Motivo revisión",
+              "displayName": "Motivo revisión",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Imagen WP",
+              "displayName": "Imagen WP",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fidelidad Score",
+              "displayName": "Fidelidad Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Comentarios redactor",
+              "displayName": "Comentarios redactor",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Remitente",
+              "displayName": "Remitente",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        672
+      ],
+      "id": "8a01fa4e-5731-4d7b-983a-b3db35838d1c",
+      "name": "Airtable — Crear registro",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ilfdijSfllKn4Pnd",
+          "name": "Airtable PAT Jordi Puente"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1776,
+        832
+      ],
+      "id": "68891eb7-9b1a-40f9-97b9-e912356201a1",
+      "name": "Merge — Registro + adjuntos"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://content.airtable.com/v0/app5FkIV6cTNWoFeo/{{ $('Airtable — Crear registro').first().json.id }}/Documento/uploadAttachment",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contentType",
+              "value": "application/pdf"
+            },
+            {
+              "name": "filename",
+              "value": "={{ $input.item.binary.data.fileName }}"
+            },
+            {
+              "name": "file",
+              "value": "={{ $json.fileBase64 }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2208,
+        688
+      ],
+      "id": "1c0991a0-9e7c-44cb-aca7-db3fb5eb1e3c",
+      "name": "Airtable — Subir documento PDF",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ilfdijSfllKn4Pnd",
+          "name": "Airtable PAT Jordi Puente"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "app5FkIV6cTNWoFeo",
+          "mode": "list",
+          "cachedResultName": "CMS Wordpress",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblVkszOGc9BXmwug",
+          "mode": "list",
+          "cachedResultName": "Publicaciones",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo/tblVkszOGc9BXmwug"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable — Crear registro').item.json.id }}",
+            "Estado": "🔎 En Revisión",
+            "Fidelidad Score": 0
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Asunto email",
+              "displayName": "Asunto email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aprobación",
+              "displayName": "Aprobación",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "❌ Cancelado",
+                  "value": "❌ Cancelado"
+                },
+                {
+                  "name": "🔁 Guardando Email",
+                  "value": "🔁 Guardando Email"
+                },
+                {
+                  "name": "🔎 En Revisión",
+                  "value": "🔎 En Revisión"
+                },
+                {
+                  "name": "✋🏼 Procesando",
+                  "value": "✋🏼 Procesando"
+                },
+                {
+                  "name": "🔎 Borrador WP Creado",
+                  "value": "🔎 Borrador WP Creado"
+                },
+                {
+                  "name": "✋🏼 Procesando...",
+                  "value": "✋🏼 Procesando..."
+                },
+                {
+                  "name": "✅ Publicado (WP y redes)",
+                  "value": "✅ Publicado (WP y redes)"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Empresa",
+              "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Documento",
+              "displayName": "Documento",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Imagen",
+              "displayName": "Imagen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Origin",
+              "displayName": "Origin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Título",
+              "displayName": "Título",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Clean HTML",
+              "displayName": "Clean HTML",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Contenido MD",
+              "displayName": "Contenido MD",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fecha de creación",
+              "displayName": "Fecha de creación",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Categoria/s",
+              "displayName": "Categoria/s",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "options": [
+                {
+                  "name": "Noticias",
+                  "value": "Noticias"
+                },
+                {
+                  "name": "Social",
+                  "value": "Social"
+                },
+                {
+                  "name": "Medioambiente",
+                  "value": "Medioambiente"
+                },
+                {
+                  "name": "Buen Gobierno",
+                  "value": "Buen Gobierno"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Título periodístico",
+              "displayName": "Título periodístico",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Etiquetas",
+              "displayName": "Etiquetas",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Extracto",
+              "displayName": "Extracto",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Subtítulo",
+              "displayName": "Subtítulo",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Highlights",
+              "displayName": "Highlights",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Cuerpo del contenido en HTML",
+              "displayName": "Cuerpo del contenido en HTML",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría NAE",
+              "displayName": "Categoría NAE",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Noticias",
+                  "value": "Noticias"
+                },
+                {
+                  "name": "Opinión",
+                  "value": "Opinión"
+                },
+                {
+                  "name": "Entrevistas",
+                  "value": "Entrevistas"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría ESG",
+              "displayName": "Categoría ESG",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Medioambiente",
+                  "value": "Medioambiente"
+                },
+                {
+                  "name": "Social",
+                  "value": "Social"
+                },
+                {
+                  "name": "Buen gobierno",
+                  "value": "Buen gobierno"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría ODS",
+              "displayName": "Categoría ODS",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "ODS 1 Fin de la pobreza",
+                  "value": "ODS 1 Fin de la pobreza"
+                },
+                {
+                  "name": "ODS 2 Hambre cero",
+                  "value": "ODS 2 Hambre cero"
+                },
+                {
+                  "name": "ODS 3 Salud y bienestar",
+                  "value": "ODS 3 Salud y bienestar"
+                },
+                {
+                  "name": "ODS 4 Educación de calidad",
+                  "value": "ODS 4 Educación de calidad"
+                },
+                {
+                  "name": "ODS 5 Igualdad de género",
+                  "value": "ODS 5 Igualdad de género"
+                },
+                {
+                  "name": "ODS 6 Agua limpia y saneamiento",
+                  "value": "ODS 6 Agua limpia y saneamiento"
+                },
+                {
+                  "name": "ODS 7 Energía asequible y no contaminante",
+                  "value": "ODS 7 Energía asequible y no contaminante"
+                },
+                {
+                  "name": "ODS 8 Trabajo decente y crecimiento económico",
+                  "value": "ODS 8 Trabajo decente y crecimiento económico"
+                },
+                {
+                  "name": "ODS 9 Industria, innovación e infraestructura",
+                  "value": "ODS 9 Industria, innovación e infraestructura"
+                },
+                {
+                  "name": "ODS 10 Reducción de las desigualdades",
+                  "value": "ODS 10 Reducción de las desigualdades"
+                },
+                {
+                  "name": "ODS 11 Ciudades y comunidades sostenibles",
+                  "value": "ODS 11 Ciudades y comunidades sostenibles"
+                },
+                {
+                  "name": "ODS 12 Producción y consumo responsables",
+                  "value": "ODS 12 Producción y consumo responsables"
+                },
+                {
+                  "name": "ODS 13 Acción por el clima",
+                  "value": "ODS 13 Acción por el clima"
+                },
+                {
+                  "name": "ODS 14 Vida submarina",
+                  "value": "ODS 14 Vida submarina"
+                },
+                {
+                  "name": "ODS 15 Vida de ecosistemas terrestres",
+                  "value": "ODS 15 Vida de ecosistemas terrestres"
+                },
+                {
+                  "name": "ODS 16 Paz, justicia e instituciones sólidas",
+                  "value": "ODS 16 Paz, justicia e instituciones sólidas"
+                },
+                {
+                  "name": "ODS 17 Alianzas para lograr los objetivos",
+                  "value": "ODS 17 Alianzas para lograr los objetivos"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "País",
+              "displayName": "País",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "España",
+                  "value": "España"
+                },
+                {
+                  "name": "Argentina",
+                  "value": "Argentina"
+                },
+                {
+                  "name": "Chile",
+                  "value": "Chile"
+                },
+                {
+                  "name": "Colombia",
+                  "value": "Colombia"
+                },
+                {
+                  "name": "Ecuador",
+                  "value": "Ecuador"
+                },
+                {
+                  "name": "México",
+                  "value": "México"
+                },
+                {
+                  "name": "Perú",
+                  "value": "Perú"
+                },
+                {
+                  "name": "Internacional",
+                  "value": "Internacional"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Motivo revisión",
+              "displayName": "Motivo revisión",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Imagen WP",
+              "displayName": "Imagen WP",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fidelidad Score",
+              "displayName": "Fidelidad Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        3216,
+        880
+      ],
+      "id": "2a233262-1be2-45dc-abfc-903eb76e7d2f",
+      "name": "Airtable — Actualizar estado a En Revisión",
+      "alwaysOutputData": false,
+      "retryOnFail": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ilfdijSfllKn4Pnd",
+          "name": "Airtable PAT Jordi Puente"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        2208,
+        1040
+      ],
+      "id": "293be20e-5dfe-44bd-9e46-a23f4a625477",
+      "name": "Limit — Primera imagen válida"
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        80,
+        864
+      ],
+      "id": "caf157fc-8adf-4110-bb29-82ce7db8fc61",
+      "name": "WORD — Subir a Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1wA279XwHu14WAjk",
+          "name": "Google Drive - Jordi Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0029f266-8de6-4ed2-a2a1-ee2ed53b787c",
+              "leftValue": "={{ $json.mimeType }}",
+              "rightValue": "image/jpg",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "1323a5cf-3575-4634-849b-eedcbeaa0e57",
+              "leftValue": "={{ $json.mimeType }}",
+              "rightValue": "image/jpeg",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "f158aaca-04dc-4c77-a9e0-b32f9316b527",
+              "leftValue": "={{ $json.mimeType }}",
+              "rightValue": "image/png",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "extra-image-1",
+              "leftValue": "={{ $json.mimeType }}",
+              "rightValue": "image/gif",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "extra-image-2",
+              "leftValue": "={{ $json.mimeType }}",
+              "rightValue": "image/webp",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        1088
+      ],
+      "id": "e4f843ff-9bb0-490a-938d-28f2e5a3a3be",
+      "name": "Imagen — Filtrar adjuntos válidos"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf",
+              "drawingsToFormat": "application/pdf",
+              "slidesToFormat": "application/pdf",
+              "sheetsToFormat": "application/pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        512,
+        864
+      ],
+      "id": "fd134853-b6ab-46d8-a777-5c288ad20542",
+      "name": "WORD — Descargar como PDF",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1wA279XwHu14WAjk",
+          "name": "Google Drive - Jordi Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://www.googleapis.com/drive/v3/files/{{ $json.id }}/copy",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"mimeType\": \"application/vnd.google-apps.document\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        304,
+        864
+      ],
+      "id": "a8f6bbb2-3e1a-42c5-ada8-7e2ef6f6e2dc",
+      "name": "WORD — Convertir a Google Docs",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1wA279XwHu14WAjk",
+          "name": "Google Drive - Jordi Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteFile",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('WORD — Subir a Google Drive').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        720,
+        704
+      ],
+      "id": "50720477-26cc-472b-98b1-970234d74b70",
+      "name": "Cleanup — Borrar WORD temporal",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1wA279XwHu14WAjk",
+          "name": "Google Drive - Jordi Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        3008,
+        864
+      ],
+      "id": "c421e77e-3152-4a91-943d-6eaf8f110c8c",
+      "name": "Merge — Esperar adjuntos subidos"
+    },
+    {
+      "parameters": {
+        "jsCode": "const filtered = [];\nfor (let i = 0; i < items.length; i++) {\n  const item = items[i];\n  if (item.binary?.data?.mimeType === 'application/pdf') {\n    const binaryBuffer = await this.helpers.getBinaryDataBuffer(i, 'data');\n    const base64 = binaryBuffer.toString('base64');\n    filtered.push({\n      json: {\n        ...item.json,\n        fileBase64: base64,\n        fileName: item.binary.data.fileName,\n        mimeType: item.binary.data.mimeType,\n      },\n      binary: item.binary,\n    });\n  }\n}\nreturn filtered;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1984,
+        688
+      ],
+      "id": "96075545-dedf-467a-8157-c7cca69c9650",
+      "name": "Code — Preparar PDF para subida"
+    },
+    {
+      "parameters": {
+        "jsCode": "const filtered = [];\nfor (let i = 0; i < items.length; i++) {\n  const item = items[i];\n  if (item.binary?.data?.mimeType?.startsWith('image/')) {\n    const binaryBuffer = await this.helpers.getBinaryDataBuffer(i, 'data');\n    const base64 = binaryBuffer.toString('base64');\n    filtered.push({\n      json: {\n        ...item.json,\n        fileBase64: base64,\n        fileName: item.binary.data.fileName,\n        mimeType: item.binary.data.mimeType,\n      },\n      binary: item.binary,\n    });\n  }\n}\nreturn filtered;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        960
+      ],
+      "id": "39afb262-4c86-4fea-b3a6-7173ac290914",
+      "name": "Code — Preparar imagen para subida"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://content.airtable.com/v0/app5FkIV6cTNWoFeo/{{ $('Airtable — Crear registro').first().json.id }}/Imagen/uploadAttachment",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contentType",
+              "value": "={{ $json.mimeType }}"
+            },
+            {
+              "name": "filename",
+              "value": "={{ $json.fileName }}"
+            },
+            {
+              "name": "file",
+              "value": "={{ $json.fileBase64 }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2208,
+        880
+      ],
+      "id": "116a9749-923e-4957-a063-2beae2098c74",
+      "name": "Airtable — Subir imagen original",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ilfdijSfllKn4Pnd",
+          "name": "Airtable PAT Jordi Puente"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://content.airtable.com/v0/app5FkIV6cTNWoFeo/{{ $('Airtable — Crear registro').first().json.id }}/Imagen WP/uploadAttachment",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contentType",
+              "value": "={{ $input.item.binary.data.mimeType }}"
+            },
+            {
+              "name": "filename",
+              "value": "={{ $input.item.binary.data.fileName }}"
+            },
+            {
+              "name": "file",
+              "value": "={{ $json.fileBase64 }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2800,
+        1040
+      ],
+      "id": "68c6ce57-5607-4254-bb8f-c5366d55f1da",
+      "name": "Airtable — Subir imagen WP",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ilfdijSfllKn4Pnd",
+          "name": "Airtable PAT Jordi Puente"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = items[0];\nconst binaryBuffer = await this.helpers.getBinaryDataBuffer(0, 'data');\nconst base64 = binaryBuffer.toString('base64');\n\nreturn [{\n  json: {\n    ...item.json,\n    fileBase64: base64,\n    fileName: item.binary.data.fileName,\n    mimeType: item.binary.data.mimeType,\n  },\n  binary: item.binary,\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2592,
+        1040
+      ],
+      "id": "7ac472e0-1fed-45ff-b7f0-59a54cdb3926",
+      "name": "Code — Preparar imagen WP para subida"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://www.corresponsables.com/wp-json/wp/v2/posts/{{ $('Create a Post').item.json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"featured_media\": {{ $('Upload IMG to WP Media').item.json.id }} }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5696,
+        880
+      ],
+      "id": "288f2fdc-2678-4934-89ed-f6ad12ca37fc",
+      "name": "Update Post w/ IMG",
+      "credentials": {
+        "wordpressApi": {
+          "id": "gdh1j5rwYzfP1JgL",
+          "name": "Wordpress - Gonzalo E."
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.corresponsables.com/wp-json/wp/v2/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Disposition",
+              "value": "=attachment; filename={{ $json._imgFileName }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4864,
+        880
+      ],
+      "id": "c0a13a93-d156-41ff-a4c5-3ef5f8801714",
+      "name": "Upload IMG to WP Media",
+      "alwaysOutputData": false,
+      "credentials": {
+        "wordpressApi": {
+          "id": "gdh1j5rwYzfP1JgL",
+          "name": "Wordpress - Gonzalo E."
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        5264,
+        880
+      ],
+      "id": "e9fd8c98-7538-4e2d-865b-0b4d48a738db",
+      "name": "Limit2",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Get a record').item.json['Título periodístico'] }}",
+        "additionalFields": {
+          "content": "={{ '[sc name=\"modal_noticia\"][/sc]\\n' + $('Get a record').item.json['Cuerpo del contenido en HTML'] + '\\n<p><strong><em>Consulta más información responsable en las <a href=\"https://corresponsables.com/ver_publicaciones\" target=\"_blank\" rel=\"noopener noreferrer\">publicaciones Corresponsables</a>.</em></strong></p>' }}",
+          "slug": "={{ $('Get a record').item.json.Slug }}",
+          "status": "draft"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        5488,
+        880
+      ],
+      "id": "944a1987-e529-4af9-b3f1-574007f6e043",
+      "name": "Create a Post",
+      "credentials": {
+        "wordpressApi": {
+          "id": "gdh1j5rwYzfP1JgL",
+          "name": "Wordpress - Gonzalo E."
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "app5FkIV6cTNWoFeo",
+          "mode": "list",
+          "cachedResultName": "CMS Wordpress",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblVkszOGc9BXmwug",
+          "mode": "list",
+          "cachedResultName": "Publicaciones",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo/tblVkszOGc9BXmwug"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get a record').item.json.id }}",
+            "Estado": "✅ Borrador WP Creado",
+            "Fidelidad Score": 0,
+            "URL": "={{\n  'https://corresponsables.com/' +\n  ($('Get a record').item.json['Categoría NAE'] === 'Noticias' ? 'actualidad' :\n   $('Get a record').item.json['Categoría NAE'] === 'Entrevistas' ? 'entrevistas' :\n   $('Get a record').item.json['Categoría NAE'] === 'Opinión' ? 'opinion' : 'actualidad')\n  + '/' + $('Get a record').item.json.Slug\n}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Asunto email",
+              "displayName": "Asunto email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aprobación",
+              "displayName": "Aprobación",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "❌ Cancelado",
+                  "value": "❌ Cancelado"
+                },
+                {
+                  "name": "🔁 Guardando Email",
+                  "value": "🔁 Guardando Email"
+                },
+                {
+                  "name": "🔎 En Revisión",
+                  "value": "🔎 En Revisión"
+                },
+                {
+                  "name": "✋🏼 Procesando",
+                  "value": "✋🏼 Procesando"
+                },
+                {
+                  "name": "✅ Borrador WP Creado",
+                  "value": "✅ Borrador WP Creado"
+                },
+                {
+                  "name": "✅ Publicado",
+                  "value": "✅ Publicado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Empresa",
+              "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Documento",
+              "displayName": "Documento",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Imagen",
+              "displayName": "Imagen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Título",
+              "displayName": "Título",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Título periodístico",
+              "displayName": "Título periodístico",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Subtítulo",
+              "displayName": "Subtítulo",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Extracto",
+              "displayName": "Extracto",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Etiquetas",
+              "displayName": "Etiquetas",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Highlights",
+              "displayName": "Highlights",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Origin",
+              "displayName": "Origin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Cuerpo del contenido en HTML",
+              "displayName": "Cuerpo del contenido en HTML",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fecha de creación",
+              "displayName": "Fecha de creación",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Categoria/s",
+              "displayName": "Categoria/s",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "options": [
+                {
+                  "name": "Noticias",
+                  "value": "Noticias"
+                },
+                {
+                  "name": "Social",
+                  "value": "Social"
+                },
+                {
+                  "name": "Medioambiente",
+                  "value": "Medioambiente"
+                },
+                {
+                  "name": "Buen Gobierno",
+                  "value": "Buen Gobierno"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Clean HTML",
+              "displayName": "Clean HTML",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Contenido MD",
+              "displayName": "Contenido MD",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría NAE",
+              "displayName": "Categoría NAE",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Noticias",
+                  "value": "Noticias"
+                },
+                {
+                  "name": "Opinión",
+                  "value": "Opinión"
+                },
+                {
+                  "name": "Entrevistas",
+                  "value": "Entrevistas"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría ESG",
+              "displayName": "Categoría ESG",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Medioambiente",
+                  "value": "Medioambiente"
+                },
+                {
+                  "name": "Social",
+                  "value": "Social"
+                },
+                {
+                  "name": "Buen gobierno",
+                  "value": "Buen gobierno"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría ODS",
+              "displayName": "Categoría ODS",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "ODS 1 Fin de la pobreza",
+                  "value": "ODS 1 Fin de la pobreza"
+                },
+                {
+                  "name": "ODS 2 Hambre cero",
+                  "value": "ODS 2 Hambre cero"
+                },
+                {
+                  "name": "ODS 3 Salud y bienestar",
+                  "value": "ODS 3 Salud y bienestar"
+                },
+                {
+                  "name": "ODS 4 Educación de calidad",
+                  "value": "ODS 4 Educación de calidad"
+                },
+                {
+                  "name": "ODS 5 Igualdad de género",
+                  "value": "ODS 5 Igualdad de género"
+                },
+                {
+                  "name": "ODS 6 Agua limpia y saneamiento",
+                  "value": "ODS 6 Agua limpia y saneamiento"
+                },
+                {
+                  "name": "ODS 7 Energía asequible y no contaminante",
+                  "value": "ODS 7 Energía asequible y no contaminante"
+                },
+                {
+                  "name": "ODS 8 Trabajo decente y crecimiento económico",
+                  "value": "ODS 8 Trabajo decente y crecimiento económico"
+                },
+                {
+                  "name": "ODS 9 Industria, innovación e infraestructura",
+                  "value": "ODS 9 Industria, innovación e infraestructura"
+                },
+                {
+                  "name": "ODS 10 Reducción de las desigualdades",
+                  "value": "ODS 10 Reducción de las desigualdades"
+                },
+                {
+                  "name": "ODS 11 Ciudades y comunidades sostenibles",
+                  "value": "ODS 11 Ciudades y comunidades sostenibles"
+                },
+                {
+                  "name": "ODS 12 Producción y consumo responsables",
+                  "value": "ODS 12 Producción y consumo responsables"
+                },
+                {
+                  "name": "ODS 13 Acción por el clima",
+                  "value": "ODS 13 Acción por el clima"
+                },
+                {
+                  "name": "ODS 14 Vida submarina",
+                  "value": "ODS 14 Vida submarina"
+                },
+                {
+                  "name": "ODS 15 Vida de ecosistemas terrestres",
+                  "value": "ODS 15 Vida de ecosistemas terrestres"
+                },
+                {
+                  "name": "ODS 16 Paz, justicia e instituciones sólidas",
+                  "value": "ODS 16 Paz, justicia e instituciones sólidas"
+                },
+                {
+                  "name": "ODS 17 Alianzas para lograr los objetivos",
+                  "value": "ODS 17 Alianzas para lograr los objetivos"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "País",
+              "displayName": "País",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "España",
+                  "value": "España"
+                },
+                {
+                  "name": "Argentina",
+                  "value": "Argentina"
+                },
+                {
+                  "name": "Chile",
+                  "value": "Chile"
+                },
+                {
+                  "name": "Colombia",
+                  "value": "Colombia"
+                },
+                {
+                  "name": "Ecuador",
+                  "value": "Ecuador"
+                },
+                {
+                  "name": "México",
+                  "value": "México"
+                },
+                {
+                  "name": "Perú",
+                  "value": "Perú"
+                },
+                {
+                  "name": "Internacional",
+                  "value": "Internacional"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Motivo revisión",
+              "displayName": "Motivo revisión",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Imagen WP",
+              "displayName": "Imagen WP",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fidelidad Score",
+              "displayName": "Fidelidad Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Comentarios redactor",
+              "displayName": "Comentarios redactor",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Remitente",
+              "displayName": "Remitente",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        6528,
+        880
+      ],
+      "id": "2c8abc18-6b0d-44dd-9351-38c4616c9221",
+      "name": "Status: Borrador creado en WP",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ilfdijSfllKn4Pnd",
+          "name": "Airtable PAT Jordi Puente"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const WP_API_URL = \"https://www.corresponsables.com/wp-json/wp/v2\";\nconst USER = \"noticias@corresponsables.com\";\nconst APP_PASSWORD = \"TlRg KQVP j6g6 UnLB fEWG ggCm\";\nconst POST_ID = $('Create a Post').first().json.id;\nconst rawTags = $('Get a record').first().json['Etiquetas'] ?? '';\nconst tagsToAssign = rawTags.split('|').map(t => t.trim()).filter(t => t.length > 0);\n\nif (tagsToAssign.length === 0) {\n  return [{ json: { message: 'Sin etiquetas, nada que asignar.' } }];\n}\n\nasync function ensureTagExists(tagName) {\n  // 1. Buscar si ya existe\n  const search = await this.helpers.httpRequest({\n    method: \"GET\",\n    url: `${WP_API_URL}/tags`,\n    qs: { search: tagName },\n    auth: { username: USER, password: APP_PASSWORD },\n    json: true\n  });\n\n  if (Array.isArray(search) && search.length > 0) {\n    const exact = search.find(t => t.name.toLowerCase() === tagName.toLowerCase());\n    if (exact) return { id: exact.id, name: exact.name };\n  }\n\n  // 2. Intentar crear — capturamos term_exists con ignoreHttpStatusErrors\n  const res = await this.helpers.httpRequest({\n    method: \"POST\",\n    url: `${WP_API_URL}/tags`,\n    body: { name: tagName },\n    auth: { username: USER, password: APP_PASSWORD },\n    json: true,\n    ignoreHttpStatusErrors: true\n  });\n\n  if (res.code === 'term_exists') {\n    return { id: res.data.term_id, name: tagName };\n  }\n\n  return { id: res.id, name: res.name };\n}\n\nasync function run() {\n  const tagObjects = [];\n\n  for (const tagName of tagsToAssign) {\n    const tag = await ensureTagExists(tagName);\n    tagObjects.push(tag);\n  }\n\n  const tagIds = tagObjects.map(t => t.id);\n\n  await this.helpers.httpRequest({\n    method: \"POST\",\n    url: `${WP_API_URL}/posts/${POST_ID}`,\n    body: { tags: tagIds },\n    auth: { username: USER, password: APP_PASSWORD },\n    json: true\n  });\n\n  return [{ json: { success: true, tags: tagObjects } }];\n}\n\nreturn run();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5904,
+        880
+      ],
+      "id": "61fdac8b-1426-4b92-90ff-d2950ca0390f",
+      "name": "Create/Add Tags"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://www.corresponsables.com/wp-json/wp/v2/media/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"alt_text\": \"{{ $('Get a record').item.json['Título periodístico'] }}\",\n  \"description\": \"{{ $('Get a record').item.json.Description }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5056,
+        880
+      ],
+      "id": "c07c2c96-c651-4203-b75c-fc414ddb55e3",
+      "name": "Add Alt text to IMG",
+      "alwaysOutputData": false,
+      "credentials": {
+        "wordpressApi": {
+          "id": "gdh1j5rwYzfP1JgL",
+          "name": "Wordpress - Gonzalo E."
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## 🟢 BLOQUE 4 — Creación del borrador en WordPress\n\nIncluye:\n- Creación del borrador en WordPress a partir de datos en Airtable",
+        "height": 832,
+        "width": 2752
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4416,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "833c7bca-9976-433a-9a38-6dd17a715454",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const record = $('Get a record').first().json;\n\n// Airtable multi-select returns arrays; single-select returns string\nconst toArray = val => Array.isArray(val) ? val : (val ? [val] : []);\n\nconst categoríasNAE = toArray(record['Categoría NAE']);\nconst categoríasESG = toArray(record['Categoría ESG']);\nconst categoríasODS = toArray(record['Categoría ODS']);\n\nconst mapNAE = {\n  'Noticias': 218,\n  'Opinión': 144,\n  'Entrevistas': 118\n};\n\nconst mapESG = {\n  'Medioambiente': 6,\n  'Social': 13,\n  'Buen gobierno': 12\n};\n\nconst mapODS = {\n  'ODS 1 Fin de la pobreza': 4,\n  'ODS 2 Hambre cero': 5,\n  'ODS 3 Salud y bienestar': 129,\n  'ODS 4 Educación de calidad': 130,\n  'ODS 5 Igualdad de género': 131,\n  'ODS 6 Agua limpia y saneamiento': 132,\n  'ODS 7 Energía asequible y no contaminante': 133,\n  'ODS 8 Trabajo decente y crecimiento económico': 134,\n  'ODS 9 Industria, innovación e infraestructura': 135,\n  'ODS 10 Reducción de las desigualdades': 136,\n  'ODS 11 Ciudades y comunidades sostenibles': 137,\n  'ODS 12 Producción y consumo responsables': 138,\n  'ODS 13 Acción por el clima': 139,\n  'ODS 14 Vida submarina': 140,\n  'ODS 15 Vida de ecosistemas terrestres': 141,\n  'ODS 16 Paz, justicia e instituciones sólidas': 142,\n  'ODS 17 Alianzas para lograr los objetivos': 143\n};\n\nconst categories = [\n  ...categoríasNAE.map(v => mapNAE[v]).filter(id => id !== undefined),\n  ...categoríasESG.map(v => mapESG[v]).filter(id => id !== undefined),\n  ...categoríasODS.map(v => mapODS[v]).filter(id => id !== undefined),\n];\n\nreturn [{ json: { categories } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6112,
+        880
+      ],
+      "id": "e238a97a-023d-4408-9cc0-21772b1481a8",
+      "name": "Map — Categorías a IDs WordPress"
+    },
+    {
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "value": "app5FkIV6cTNWoFeo",
+          "mode": "list",
+          "cachedResultName": "CMS Wordpress",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblVkszOGc9BXmwug",
+          "mode": "list",
+          "cachedResultName": "Publicaciones",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo/tblVkszOGc9BXmwug"
+        },
+        "id": "={{ $('Airtable — Crear registro').item.json.id }}",
+        "options": {
+          "downloadFields": [
+            "Imagen WP"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        4480,
+        880
+      ],
+      "id": "62de43d8-5ec0-461c-8f61-06ba9ad2a78e",
+      "name": "Get a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ilfdijSfllKn4Pnd",
+          "name": "Airtable PAT Jordi Puente"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const record = $('Get a record').first().json;\nconst postId = $('Create a Post').first().json.id;\nconst categories = $('Map — Categorías a IDs WordPress').first().json.categories;\n\nconst subtitulo = record['Subtítulo'] ?? '';\nconst description = record['Description'] ?? '';\nconst excerpt = record['Extracto'] ?? '';\nconst rawHighlights = record['Highlights'] ?? '';\n\nconst highlights = rawHighlights\n  .split('|')\n  .map(h => h.trim())\n  .filter(h => h.length > 0)\n  .map(h => ({ point: h }));\n\nconst WP_API_URL = 'https://www.corresponsables.com/wp-json/wp/v2';\nconst AUTH = { username: 'noticias@corresponsables.com', password: 'TlRg KQVP j6g6 UnLB fEWG ggCm' };\n\nconst res1 = await this.helpers.httpRequest({\n  method: 'POST',\n  url: `${WP_API_URL}/posts/${postId}`,\n  body: { tagline: subtitulo, highlights: highlights, excerpt: excerpt },\n  auth: AUTH,\n  json: true,\n  ignoreHttpStatusErrors: true\n});\n\nconst res2 = await this.helpers.httpRequest({\n  method: 'POST',\n  url: `${WP_API_URL}/posts/${postId}`,\n  body: { categories: categories },\n  auth: AUTH,\n  json: true,\n  ignoreHttpStatusErrors: true\n});\n\nconst res3 = await this.helpers.httpRequest({\n  method: 'POST',\n  url: `${WP_API_URL}/posts/${postId}`,\n  body: { \n    meta: { \n      _yoast_wpseo_metadesc: description,\n      _yoast_wpseo_primary_category: categories[0]\n    } \n  },\n  auth: AUTH,\n  json: true,\n  ignoreHttpStatusErrors: true\n});\n\nreturn [{ json: {\n  postId,\n  tagline: res1.tagline,\n  highlights: res1.highlights,\n  excerpt: res1.excerpt,\n  categories: res2.categories,\n  yoast_metadesc: res3.meta?._yoast_wpseo_metadesc,\n  yoast_primary: res3.meta?._yoast_wpseo_primary_category,\n  meta_completo: res3.meta\n}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6320,
+        880
+      ],
+      "id": "36ad54b0-aba6-469f-9ee5-f34baaf863d2",
+      "name": "Update post fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get a record con downloadFields devuelve la imagen con una clave dinámica\n// (ej: \"Imagen WP_0\"). La renombramos a 'data' para que Upload IMG to WP Media la encuentre.\nconst item = items[0];\nconst binaries = item.binary ?? {};\n\n// Buscar la primera clave que contenga imagen\nconst imgKey = Object.keys(binaries).find(k => \n  binaries[k].mimeType?.startsWith('image/') || k.toLowerCase().includes('imagen')\n) ?? Object.keys(binaries)[0];\n\nif (!imgKey) {\n  throw new Error('No se encontró imagen binaria en el item de Airtable');\n}\n\nreturn [{\n  json: {\n    ...item.json,\n    _imgFileName: binaries[imgKey].fileName,\n    _imgMimeType: binaries[imgKey].mimeType,\n  },\n  binary: {\n    data: binaries[imgKey]  // renombrar a 'data'\n  }\n}];"
+      },
+      "id": "a993f115-e197-47e7-b7fe-fb53b1e28a30",
+      "name": "Normalizar imagen WP",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4656,
+        880
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $(\"Gmail — Trigger Carpeta 'Publicar'\").first().json.id }}",
+        "labelIds": [
+          "Label_6055473966553915601"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3712,
+        880
+      ],
+      "id": "2ba1438e-9f2f-4fa0-88e4-59b650d52985",
+      "name": "Gmail — Añadir etiqueta 'Publicando'",
+      "webhookId": "71096a05-9cb7-42bb-a7c7-1329afe87a5e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_4575785804962333449"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3968,
+        880
+      ],
+      "id": "a065d0f0-81f4-4848-b285-1d9666731483",
+      "name": "Gmail — Quitar etiqueta 'Publicar'",
+      "webhookId": "01f2dfc5-6121-41c5-9f56-2d5f92b3c1f8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail — Quitar etiqueta \\'Publicar\\'').item.json.id }}\n",
+        "labelIds": [
+          "Label_4535128483547211696"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        6736,
+        880
+      ],
+      "id": "afa6716d-e991-4fce-996b-db875b6f5f07",
+      "name": "Gmail — Añadir etiqueta 'Publicado'",
+      "webhookId": "110cbb85-aef3-4fd7-9515-087fd7d1a3ca",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $('Gmail — Quitar etiqueta \\'Publicar\\'').item.json.id }}",
+        "labelIds": [
+          "Label_6055473966553915601"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        6928,
+        880
+      ],
+      "id": "ad07d283-ce30-4726-a723-a96972c54e37",
+      "name": "Gmail — Quitar etiqueta 'Publicando'",
+      "webhookId": "0ce7a96d-16b0-4002-b8bc-4b685bd50698",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "Label_4575785804962333449"
+          ]
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1584,
+        496
+      ],
+      "id": "7b998043-9ab2-47c6-91f7-655fdf0f5a43",
+      "name": "Gmail — Trigger Carpeta 'Publicar'",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $(\"Gmail — Trigger Carpeta 'Publicar'\").first().json.id }}",
+        "labelIds": [
+          "UNREAD"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -1120,
+        320
+      ],
+      "id": "c27e5e74-68e7-4fd6-af8d-4e694c4e47a6",
+      "name": "Gmail — Marcar como leído",
+      "webhookId": "71096a05-9cb7-42bb-a7c7-1329afe87a5e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "IF — Asunto es contenido procesable": {
+      "main": [
+        [
+          {
+            "node": "Gmail — Marcar como leído",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code — Separar adjuntos en ítems",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "STOP — Email no procesable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Imagen — Redimensionar a 1005x475 WebP": {
+      "main": [
+        [
+          {
+            "node": "Code — Preparar imagen WP para subida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — Separar adjuntos en ítems": {
+      "main": [
+        [
+          {
+            "node": "IF — Es documento (PDF/DOCX/DOC)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF — Es documento (PDF/DOCX/DOC)": {
+      "main": [
+        [
+          {
+            "node": "Code — Seleccionar primer documento válido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Imagen — Filtrar adjuntos válidos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — Seleccionar primer documento válido": {
+      "main": [
+        [
+          {
+            "node": "Switch — Tipo de documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch — Tipo de documento": {
+      "main": [
+        [
+          {
+            "node": "PDF — Extraer texto",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge — Registro + adjuntos",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "WORD — Subir a Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WORD — Subir a Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF — Extraer texto": {
+      "main": [
+        [
+          {
+            "node": "AI — Extraer y clasificar contenido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI — Extraer y clasificar contenido": {
+      "main": [
+        [
+          {
+            "node": "AI — Validar fidelidad y empresa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI — Validar fidelidad y empresa": {
+      "main": [
+        [
+          {
+            "node": "AI — Generar SEO y metadatos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI — Generar SEO y metadatos": {
+      "main": [
+        [
+          {
+            "node": "Airtable — Crear registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable — Crear registro": {
+      "main": [
+        [
+          {
+            "node": "Merge — Registro + adjuntos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge — Registro + adjuntos": {
+      "main": [
+        [
+          {
+            "node": "Code — Preparar PDF para subida",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code — Preparar imagen para subida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable — Subir documento PDF": {
+      "main": [
+        [
+          {
+            "node": "Merge — Esperar adjuntos subidos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable — Actualizar estado a En Revisión": {
+      "main": [
+        [
+          {
+            "node": "Gmail — Añadir etiqueta 'Publicando'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit — Primera imagen válida": {
+      "main": [
+        [
+          {
+            "node": "Imagen — Redimensionar a 1005x475 WebP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WORD — Subir a Google Drive": {
+      "main": [
+        [
+          {
+            "node": "WORD — Convertir a Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Imagen — Filtrar adjuntos válidos": {
+      "main": [
+        [
+          {
+            "node": "Merge — Registro + adjuntos",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "WORD — Descargar como PDF": {
+      "main": [
+        [
+          {
+            "node": "Cleanup — Borrar WORD temporal",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge — Registro + adjuntos",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "PDF — Extraer texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WORD — Convertir a Google Docs": {
+      "main": [
+        [
+          {
+            "node": "WORD — Descargar como PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleanup — Borrar WORD temporal": {
+      "main": [
+        [
+          {
+            "node": "Cleanup — Borrar Google Doc temporal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge — Esperar adjuntos subidos": {
+      "main": [
+        [
+          {
+            "node": "Airtable — Actualizar estado a En Revisión",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — Preparar PDF para subida": {
+      "main": [
+        [
+          {
+            "node": "Airtable — Subir documento PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — Preparar imagen para subida": {
+      "main": [
+        [
+          {
+            "node": "Limit — Primera imagen válida",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Airtable — Subir imagen original",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable — Subir imagen original": {
+      "main": [
+        [
+          {
+            "node": "Merge — Esperar adjuntos subidos",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Airtable — Subir imagen WP": {
+      "main": [
+        [
+          {
+            "node": "Merge — Esperar adjuntos subidos",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Code — Preparar imagen WP para subida": {
+      "main": [
+        [
+          {
+            "node": "Airtable — Subir imagen WP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Post w/ IMG": {
+      "main": [
+        [
+          {
+            "node": "Create/Add Tags",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload IMG to WP Media": {
+      "main": [
+        [
+          {
+            "node": "Add Alt text to IMG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit2": {
+      "main": [
+        [
+          {
+            "node": "Create a Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a Post": {
+      "main": [
+        [
+          {
+            "node": "Update Post w/ IMG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create/Add Tags": {
+      "main": [
+        [
+          {
+            "node": "Map — Categorías a IDs WordPress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Alt text to IMG": {
+      "main": [
+        [
+          {
+            "node": "Limit2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map — Categorías a IDs WordPress": {
+      "main": [
+        [
+          {
+            "node": "Update post fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update post fields": {
+      "main": [
+        [
+          {
+            "node": "Status: Borrador creado en WP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a record": {
+      "main": [
+        [
+          {
+            "node": "Normalizar imagen WP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar imagen WP": {
+      "main": [
+        [
+          {
+            "node": "Upload IMG to WP Media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status: Borrador creado en WP": {
+      "main": [
+        [
+          {
+            "node": "Gmail — Añadir etiqueta 'Publicado'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail — Añadir etiqueta 'Publicando'": {
+      "main": [
+        [
+          {
+            "node": "Gmail — Quitar etiqueta 'Publicar'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail — Quitar etiqueta 'Publicar'": {
+      "main": [
+        [
+          {
+            "node": "Get a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail — Añadir etiqueta 'Publicado'": {
+      "main": [
+        [
+          {
+            "node": "Gmail — Quitar etiqueta 'Publicando'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail — Trigger Carpeta 'Publicar'": {
+      "main": [
+        [
+          {
+            "node": "IF — Asunto es contenido procesable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail — Marcar como leído": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d27fc182-930f-4145-b600-087123c5aaad",
+  "meta": {
+    "instanceId": "4be3cf3d35b85ad6682e04988a9bb06bcccdd4b45325e52bbf853c7cfe8fce64"
+  },
+  "id": "8rxDiP7kD3Hw8cc7",
+  "tags": [
+    {
+      "updatedAt": "2025-09-10T14:54:36.194Z",
+      "createdAt": "2025-09-10T14:54:36.194Z",
+      "id": "B9ctjwzuOcc6qsy6",
+      "name": "NdP"
+    }
+  ]
+}
