@@ -1,0 +1,1019 @@
+{
+  "name": "Agente Redes Sociales — Corresponsables",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "app5FkIV6cTNWoFeo",
+          "mode": "list",
+          "cachedResultName": "CMS Wordpress",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblVkszOGc9BXmwug",
+          "mode": "list",
+          "cachedResultName": "Publicaciones",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo/tblVkszOGc9BXmwug"
+        },
+        "filterByFormula": "=AND({Estado}=\"✅ Publicado\", {Post LinkedIn}=\"\")",
+        "options": {
+          "fields": [
+            "Título periodístico",
+            "Subtítulo",
+            "Etiquetas",
+            "Highlights",
+            "Categoría NAE",
+            "Categoría ESG",
+            "Categoría ODS",
+            "Cuerpo del contenido en HTML",
+            "Description",
+            "URL",
+            "Estado"
+          ]
+        }
+      },
+      "id": "04b19f6a-756a-4ff1-891a-16682ad9d393",
+      "name": "📋 Airtable — Buscar pendientes",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        -1024,
+        -240
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ilfdijSfllKn4Pnd",
+          "name": "Airtable PAT Jordi Puente"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Eres el redactor de LinkedIn de Corresponsables.com, medio líder en Iberoamérica sobre RSE, ESG, Sostenibilidad y ODS. Tu objetivo es generar posts que maximicen el engagement (likes, comentarios, comparticiones y clics) entre una audiencia profesional: Direcciones de RSE/Sostenibilidad y de comunicación corporativa.\n\nESTRUCTURA OBLIGATORIA:\n1. Primera línea: dato o afirmación de impacto en negrita unicode, sola, sin preámbulos. Si es una entrevista o artículo, puede ser una declaración, pero entonces debe ir entrecomillada. Idealmente, puedes usar el título recibido en el user prompt. Al final de esta línea añade: 👉 [URL]\n2. Pregunta retórica o contexto brevísimo (1-2 frases)\n3. Cuerpo: 3-4 puntos clave con emoji o flecha unicode delante \n   (🔹, 🌍, 📊, ➤, ➜, ▶, →, ⟶, ›, », ▷, ☛...)\n4. Si CATEGORÍA NAE es \"Entrevistas\": OBLIGATORIO mencionar al entrevistado, siempre que lo sepas. Nunca lo inventes. Extrae su nombre, cargo y empresa del SUBTÍTULO y añade una frase como: \"Así lo explica [nombre], [cargo] de [empresa].\"\n   Si CATEGORÍA NAE es \"Opinión\": OBLIGATORIO mencionar al autor, siempre que lo sepas. Nunca lo inventes. Extrae su nombre y cargo del SUBTÍTULO.\n   Si CATEGORÍA NAE es \"Noticias\": omite este punto completamente.\n5. CTA directo (pide compartir, comentar y/o reflexionar)\n6. Entre 5 y 7 hashtags al final, incluyendo siempre #Corresponsables #ESG #Sostenibilidad #RSE. Puedes guiarte por las etiquetas que recibes en el user prompt.\n\nESTILO:\n- Frases cortas. Párrafos de máximo 2-3 líneas con salto entre ellos\n- Lenguaje profesional pero dinámico, nunca excesivamente formal\n- Conecta con roles específicos cuando aplique: \"Si eres Dirse...\"\n- La primera línea escríbela en negrita unicode. Ejemplo:\n  \"𝗥𝗲𝗱𝘂𝗰𝗶𝗿 𝗹𝗮 𝗵𝘂𝗲𝗹𝗹𝗮 𝗱𝗲 𝗰𝗮𝗿𝗯𝗼𝗻𝗼 𝘆𝗮 𝗻𝗼 𝗲𝘀 𝗼𝗽𝗰𝗶𝗼𝗻𝗮𝗹. 👉 URL\"\n- Emojis como marcadores visuales, no decorativos (máximo 6)\n- Nunca uses \"En un mundo donde...\" ni cierres genéricos corporativos\n\nNORMAS ESTRICTAS:\n- Máximo 1.000 caracteres en total (incluyendo hashtags y URL)\n- Responde ÚNICAMENTE con el texto del post, sin explicaciones",
+              "role": "system"
+            },
+            {
+              "content": "=Redacta un post de LinkedIn basado en este artículo:\n\nTÍTULO: {{ $('🔍 WP — Obtener ID imagen').item.json.title.rendered }}\nSUBTÍTULO: {{ $('📋 Airtable — Buscar pendientes').item.json['Subtítulo'] }}\nDESCRIPCIÓN: {{ $('🔍 WP — Obtener ID imagen').item.json.excerpt.rendered }}\nETIQUETAS: {{ $('📋 Airtable — Buscar pendientes').item.json['Etiquetas'] }}\nCATEGORÍA NAE: {{ $('📋 Airtable — Buscar pendientes').item.json['Categoría NAE'] }}\nCATEGORÍA ESG: {{ $('📋 Airtable — Buscar pendientes').item.json['Categoría ESG'] }}\nCATEGORÍA ODS: {{ $('📋 Airtable — Buscar pendientes').item.json['Categoría ODS'] }}\nHIGHLIGHTS: {{ $('📋 Airtable — Buscar pendientes').item.json['Highlights'] }}\nAUTOR/ENTREVISTADO: {{ JSON.parse($('🖼️ WP — Obtener imagen destacada').item.json.data).title.rendered }}\nCUERPO: {{ $('🔍 WP — Obtener ID imagen').item.json.content.rendered.slice(0,1500) }}\nURL (usa esta URL exacta, no escribas [URL]): {{ $('🔍 WP — Obtener ID imagen').item.json.link }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a3df0ef4-978c-4502-89c2-a2c3278e65ff",
+      "name": "🤖 AI — Generar post redes sociales",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        -272
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "T0AKp7Yll9ff7up8",
+          "name": "OpenAi - Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================\n// EXTRAER TEXTO DEL POST GENERADO POR LA IA\n// ============================================\n// La API de OpenAI puede devolver la respuesta en dos formatos distintos\n// según la versión del modelo o del nodo n8n. Con ?? probamos el primero\n// y si viene vacío o undefined, automáticamente usamos el segundo.\nconst aiResponse = \n  $input.item.json.message?.content        // Formato nuevo (gpt-4o, gpt-4)\n  ?? $input.item.json.choices?.[0]?.message?.content  // Formato legacy (completions)\n  ?? '';                                   // Fallback: string vacío si falla todo\n\n// ============================================\n// LIMPIAR Y ESCAPAR EL TEXTO\n// ============================================\nconst postEscapado = aiResponse\n  .replace(/\\*\\*/g, '')        // Elimina asteriscos markdown (**texto**)\n  .replace(/\\\\/g, '\\\\\\\\')     // Escapa barras invertidas primero\n  .replace(/\"/g, '\\\\\"')       // Escapa comillas dobles para GraphQL\n  .replace(/\\n/g, '\\\\n')     // Escapa saltos de línea para GraphQL\n  .replace(/\\r/g, '\\\\r');    // Escapa retornos de carro para GraphQL\n\n// ============================================\n// OBTENER URL DE IMAGEN Y AUTOR DESDE WP\n// ============================================\n// El nodo WP puede devolver array o objeto directo, cubrimos ambos casos\nconst wpMedia = $('🖼️ WP — Obtener imagen destacada').item.json[0] \n  ?? $('🖼️ WP — Obtener imagen destacada').item.json;\n\n// URL permanente de la imagen destacada del post en WordPress\nconst imagenUrl = wpMedia.guid?.rendered ?? wpMedia.source_url ?? '';\n\n// Nombre del autor/entrevistado extraído del título del media en WP\nconst autor = wpMedia.title?.rendered ?? '';\n\n// ============================================\n// CONSTRUIR EL OBJETO DE SALIDA\n// ============================================\nreturn [{\n  json: {\n    // Texto limpio y escapado listo para publicar en redes y guardar en Airtable\n    linkedinPost: postEscapado,\n\n    // URL de la imagen destacada para adjuntar en Buffer\n    imagenUrl: imagenUrl,\n\n    // Nombre del autor o entrevistado\n    autor: autor,\n\n    // ID interno de Airtable para saber qué fila actualizar\n    airtableId: $('📋 Airtable — Buscar pendientes').item.json.id,\n\n    // Título del artículo para identificar la ejecución en el historial\n    titulo: $('📋 Airtable — Buscar pendientes').item.json['Título periodístico']\n  }\n}];;"
+      },
+      "id": "0fb36c20-dad3-4e86-a39c-e375b72d89f2",
+      "name": "⚙️ Code — Preparar datos post",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "app5FkIV6cTNWoFeo",
+          "mode": "list",
+          "cachedResultName": "CMS Wordpress",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblVkszOGc9BXmwug",
+          "mode": "list",
+          "cachedResultName": "Publicaciones",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo/tblVkszOGc9BXmwug"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('⚙️ Code — Preparar datos post').item.json.airtableId }}",
+            "Fidelidad Score": 0,
+            "Post LinkedIn": "={{ $('🔵 Buffer — Publicar LinkedIn').item.json.data.createPost.post.id ? 'https://www.linkedin.com/feed/update/' + $('🔵 Buffer — Publicar LinkedIn').item.json.data.createPost.post.id : '' }}",
+            "Post Facebook": "={{ $('🔵 Buffer — Publicar Facebook').item.json.data.createPost.post.id ? 'https://www.facebook.com/permalink.php?story_fbid=' + $('🔵 Buffer — Publicar Facebook').item.json.data.createPost.post.id.split('_')[1] + '&id=' + $('🔵 Buffer — Publicar Facebook').item.json.data.createPost.post.id.split('_')[0] : '' }}",
+            "Post X": "={{ $('🔵 Buffer — Publicar X').item.json.data.createPost.post.id ? 'https://x.com/corresponsables/status/' + $('🔵 Buffer — Publicar X').item.json.data.createPost.post.id : '' }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Asunto email",
+              "displayName": "Asunto email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aprobación",
+              "displayName": "Aprobación",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "🔁 Guardando Email",
+                  "value": "🔁 Guardando Email"
+                },
+                {
+                  "name": "🔎 En Revisión",
+                  "value": "🔎 En Revisión"
+                },
+                {
+                  "name": "✋🏼 Procesando",
+                  "value": "✋🏼 Procesando"
+                },
+                {
+                  "name": "✅ Borrador WP Creado",
+                  "value": "✅ Borrador WP Creado"
+                },
+                {
+                  "name": "✅ Publicado",
+                  "value": "✅ Publicado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Empresa",
+              "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Documento",
+              "displayName": "Documento",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Imagen",
+              "displayName": "Imagen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Título",
+              "displayName": "Título",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Título periodístico",
+              "displayName": "Título periodístico",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Subtítulo",
+              "displayName": "Subtítulo",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Extracto",
+              "displayName": "Extracto",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Etiquetas",
+              "displayName": "Etiquetas",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Highlights",
+              "displayName": "Highlights",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Remitente",
+              "displayName": "Remitente",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Cuerpo del contenido en HTML",
+              "displayName": "Cuerpo del contenido en HTML",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fecha de creación",
+              "displayName": "Fecha de creación",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Categoría NAE",
+              "displayName": "Categoría NAE",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Noticias",
+                  "value": "Noticias"
+                },
+                {
+                  "name": "Opinión",
+                  "value": "Opinión"
+                },
+                {
+                  "name": "Entrevistas",
+                  "value": "Entrevistas"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría ESG",
+              "displayName": "Categoría ESG",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Medioambiente",
+                  "value": "Medioambiente"
+                },
+                {
+                  "name": "Social",
+                  "value": "Social"
+                },
+                {
+                  "name": "Buen gobierno",
+                  "value": "Buen gobierno"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría ODS",
+              "displayName": "Categoría ODS",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "ODS 1 Fin de la pobreza",
+                  "value": "ODS 1 Fin de la pobreza"
+                },
+                {
+                  "name": "ODS 2 Hambre cero",
+                  "value": "ODS 2 Hambre cero"
+                },
+                {
+                  "name": "ODS 3 Salud y bienestar",
+                  "value": "ODS 3 Salud y bienestar"
+                },
+                {
+                  "name": "ODS 4 Educación de calidad",
+                  "value": "ODS 4 Educación de calidad"
+                },
+                {
+                  "name": "ODS 5 Igualdad de género",
+                  "value": "ODS 5 Igualdad de género"
+                },
+                {
+                  "name": "ODS 6 Agua limpia y saneamiento",
+                  "value": "ODS 6 Agua limpia y saneamiento"
+                },
+                {
+                  "name": "ODS 7 Energía asequible y no contaminante",
+                  "value": "ODS 7 Energía asequible y no contaminante"
+                },
+                {
+                  "name": "ODS 8 Trabajo decente y crecimiento económico",
+                  "value": "ODS 8 Trabajo decente y crecimiento económico"
+                },
+                {
+                  "name": "ODS 9 Industria, innovación e infraestructura",
+                  "value": "ODS 9 Industria, innovación e infraestructura"
+                },
+                {
+                  "name": "ODS 10 Reducción de las desigualdades",
+                  "value": "ODS 10 Reducción de las desigualdades"
+                },
+                {
+                  "name": "ODS 11 Ciudades y comunidades sostenibles",
+                  "value": "ODS 11 Ciudades y comunidades sostenibles"
+                },
+                {
+                  "name": "ODS 12 Producción y consumo responsables",
+                  "value": "ODS 12 Producción y consumo responsables"
+                },
+                {
+                  "name": "ODS 13 Acción por el clima",
+                  "value": "ODS 13 Acción por el clima"
+                },
+                {
+                  "name": "ODS 14 Vida submarina",
+                  "value": "ODS 14 Vida submarina"
+                },
+                {
+                  "name": "ODS 15 Vida de ecosistemas terrestres",
+                  "value": "ODS 15 Vida de ecosistemas terrestres"
+                },
+                {
+                  "name": "ODS 16 Paz, justicia e instituciones sólidas",
+                  "value": "ODS 16 Paz, justicia e instituciones sólidas"
+                },
+                {
+                  "name": "ODS 17 Alianzas para lograr los objetivos",
+                  "value": "ODS 17 Alianzas para lograr los objetivos"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "País",
+              "displayName": "País",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "España",
+                  "value": "España"
+                },
+                {
+                  "name": "Argentina",
+                  "value": "Argentina"
+                },
+                {
+                  "name": "Chile",
+                  "value": "Chile"
+                },
+                {
+                  "name": "Colombia",
+                  "value": "Colombia"
+                },
+                {
+                  "name": "Ecuador",
+                  "value": "Ecuador"
+                },
+                {
+                  "name": "México",
+                  "value": "México"
+                },
+                {
+                  "name": "Perú",
+                  "value": "Perú"
+                },
+                {
+                  "name": "Internacional",
+                  "value": "Internacional"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Motivo revisión",
+              "displayName": "Motivo revisión",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Imagen WP",
+              "displayName": "Imagen WP",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fidelidad Score",
+              "displayName": "Fidelidad Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Comentarios redactor",
+              "displayName": "Comentarios redactor",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Post LinkedIn",
+              "displayName": "Post LinkedIn",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "¿Cliente?",
+              "displayName": "¿Cliente?",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "options": [
+                {
+                  "name": "Potencial",
+                  "value": "Potencial"
+                },
+                {
+                  "name": "Cliente",
+                  "value": "Cliente"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Post Facebook",
+              "displayName": "Post Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Post X",
+              "displayName": "Post X",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "¿Ecosistema?",
+              "displayName": "¿Ecosistema?",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Sí",
+                  "value": "Sí"
+                },
+                {
+                  "name": "No",
+                  "value": "No"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d2207758-84d5-44c2-8e69-c1c4a50ec1a5",
+      "name": "💾 Airtable — Guardar URLs publicación",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        -272
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ilfdijSfllKn4Pnd",
+          "name": "Airtable PAT Jordi Puente"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d6c0a4f9-7ebc-4b46-8574-f54865d72366",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "✅ Publicado",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -832,
+        -240
+      ],
+      "id": "f37783c3-367f-4d52-aff3-53784a3355c0",
+      "name": "🔀 IF — Hay registros pendientes"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1232,
+        -240
+      ],
+      "id": "a9eacf12-2827-462f-ae80-f854445018fb",
+      "name": "⏱️ Trigger — Cada 5 min"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        -256
+      ],
+      "id": "91b13b24-a1aa-48dc-af55-2fe0fb94ca8a",
+      "name": "1️⃣ Limit — 1 artículo por ejecución"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.buffer.com/graphql",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "=mutation { createPost(input: { channelId: \"6a13eafdc687a22dd4231c45\", text: \"{{ $json.linkedinPost }}\", schedulingType: automatic, mode: shareNow, assets: [{ image: { url: \"{{ $json.imagenUrl }}\" } }] }) { ... on PostActionSuccess { post { id } } } }"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        496,
+        -272
+      ],
+      "id": "ec7b5787-0aa9-4604-b6bf-579dfc7d9af6",
+      "name": "🔵 Buffer — Publicar LinkedIn",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "0LOPb1nomsOfSjo6",
+          "name": "Buffer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.buffer.com/graphql",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=query",
+              "value": "=mutation { createPost(input: { channelId: \"6a13f0e7c687a22dd4232a26\", text: \"{{ $('⚙️ Code — Preparar datos post').item.json.linkedinPost }}\", schedulingType: automatic, mode: shareNow, metadata: { facebook: { type: post } }, assets: [{ image: { url: \"{{ $('⚙️ Code — Preparar datos post').item.json.imagenUrl }}\" } }] }) { ... on PostActionSuccess { post { id } } ... on InvalidInputError { message } } }"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        704,
+        -272
+      ],
+      "id": "5123a2cb-f4fc-4baf-bea6-4858eefeeb3f",
+      "name": "🔵 Buffer — Publicar Facebook",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "0LOPb1nomsOfSjo6",
+          "name": "Buffer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.buffer.com/graphql",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "=mutation { createPost(input: { channelId: \"6a13f970c687a22dd4234bb5\", text: \"{{ $('⚙️ Code — Preparar datos post').item.json.linkedinPost }}\", schedulingType: automatic, mode: shareNow, assets: [{ image: { url: \"{{ $('⚙️ Code — Preparar datos post').item.json.imagenUrl }}\" } }] }) { ... on PostActionSuccess { post { id } } } }"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        912,
+        -272
+      ],
+      "id": "2da797f3-37d9-43a4-a729-379596624d9c",
+      "name": "🔵 Buffer — Publicar X",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "0LOPb1nomsOfSjo6",
+          "name": "Buffer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://www.corresponsables.com/wp-json/wp/v2/media/{{ $json.featured_media }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -208,
+        -272
+      ],
+      "id": "a175b0ca-81a7-4193-ada6-207ce983998e",
+      "name": "🖼️ WP — Obtener imagen destacada"
+    },
+    {
+      "parameters": {
+        "url": "https://www.corresponsables.com/wp-json/wp/v2/posts",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "slug",
+              "value": "=={{ $json['URL'].split('/').filter(s => s).pop() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -384,
+        -272
+      ],
+      "id": "41e42423-83ca-40ec-8497-b772fcd21d69",
+      "name": "🔍 WP — Obtener ID imagen",
+      "credentials": {
+        "wordpressApi": {
+          "id": "gdh1j5rwYzfP1JgL",
+          "name": "Wordpress - Corresponsables - API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "📋 Airtable — Buscar pendientes": {
+      "main": [
+        [
+          {
+            "node": "🔀 IF — Hay registros pendientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🤖 AI — Generar post redes sociales": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Code — Preparar datos post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔀 IF — Hay registros pendientes": {
+      "main": [
+        [
+          {
+            "node": "1️⃣ Limit — 1 artículo por ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⏱️ Trigger — Cada 5 min": {
+      "main": [
+        [
+          {
+            "node": "📋 Airtable — Buscar pendientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1️⃣ Limit — 1 artículo por ejecución": {
+      "main": [
+        [
+          {
+            "node": "🔍 WP — Obtener ID imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Code — Preparar datos post": {
+      "main": [
+        [
+          {
+            "node": "🔵 Buffer — Publicar LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔵 Buffer — Publicar LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "🔵 Buffer — Publicar Facebook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔵 Buffer — Publicar Facebook": {
+      "main": [
+        [
+          {
+            "node": "🔵 Buffer — Publicar X",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔵 Buffer — Publicar X": {
+      "main": [
+        [
+          {
+            "node": "💾 Airtable — Guardar URLs publicación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🖼️ WP — Obtener imagen destacada": {
+      "main": [
+        [
+          {
+            "node": "🤖 AI — Generar post redes sociales",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 WP — Obtener ID imagen": {
+      "main": [
+        [
+          {
+            "node": "🖼️ WP — Obtener imagen destacada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8ec0d85f-1a7d-479b-bd3f-9e643b733b31",
+  "meta": {
+    "instanceId": "4be3cf3d35b85ad6682e04988a9bb06bcccdd4b45325e52bbf853c7cfe8fce64"
+  },
+  "id": "SzNLlY1tdWSSAuoQ",
+  "tags": []
+}
