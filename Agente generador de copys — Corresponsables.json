@@ -1,0 +1,779 @@
+{
+  "name": "Agente generador de copys — Corresponsables",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "288cda6c-fc54-4de2-ac60-2173472de75b",
+        "formTitle": "Agente Generador de Copys — Corresponsables",
+        "formDescription": "Configura los parámetros para la generación de copys para redes sociales de las publicaciones Corresponsables (Anuario, Revistas...)",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Tipo de contenido",
+              "fieldType": "dropdown",
+              "defaultValue": "Casos prácticos",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Casos prácticos"
+                  },
+                  {
+                    "option": "Fichas corporativas"
+                  },
+                  {
+                    "option": "Entrevistas"
+                  },
+                  {
+                    "option": "Artículos de opinión"
+                  },
+                  {
+                    "option": "Buenas Prácticas Destacadas"
+                  },
+                  {
+                    "option": "Noticias o reportajes"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Hashtag de la publicación",
+              "placeholder": "#21AnuarioCorresponsables",
+              "defaultValue": "#21AnuarioCorresponsables",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Nombre de la publicación",
+              "placeholder": "Anuario Corresponsables 2026 (21ª edición)",
+              "defaultValue": "Anuario Corresponsables 2026 (21ª edición)",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "URL base de la publicación",
+              "placeholder": "https://publicaciones.corresponsables.com/publication/6f073ea8/",
+              "defaultValue": "https://publicaciones.corresponsables.com/publication/6f073ea8/",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "ID de subcarpeta de Google Drive",
+              "placeholder": "Ej: 1rBeaxs5dmbOVjSO_dAkMiGhFH52DvSu1 (opcional)"
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "✅ ¡Listo! Tu solicitud ha sido enviada correctamente. Recibirás el Excel con los copys generados en noticias@corresponsables.com en unos minutos. Puede variar según el número de copys a generar (recuerda que se generarán 3 por cliente)."
+            }
+          }
+        }
+      },
+      "id": "2092c176-3399-41a6-b53b-03e462f45e1a",
+      "name": "Form Trigger — Configuración",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2,
+      "position": [
+        42768,
+        11648
+      ],
+      "webhookId": "288cda6c-fc54-4de2-ac60-2173472de75b",
+      "notes": "Ejecuta cada día laborable a las 8:00. Cambia a Manual Trigger para pruebas."
+    },
+    {
+      "parameters": {
+        "jsCode": "const hashtag = $('Form Trigger — Configuración').first().json['Hashtag de la publicación'] || '#21AnuarioCorresponsables';\nconst publicacion = $('Form Trigger — Configuración').first().json['Nombre de la publicación'] || 'Anuario Corresponsables 2026 (21ª edición)';\nconst urlBaseRaw = $('Form Trigger — Configuración').first().json['URL base de la publicación'] || 'https://publicaciones.corresponsables.com/publication/6f073ea8/';\nconst urlBase = urlBaseRaw.replace(/\\/?$/, '/') + '?p=';\n\nconst items = [];\n\nfor (const item of $input.all()) {\n  const fileId = item.json._fileId || '';\n  const imagenUrl = fileId\n    ? 'https://drive.google.com/uc?export=view&id=' + fileId\n    : '';\n  const raw = item.json.choices?.[0]?.message?.content || '';\n\n  // Intentar parsear como array o como objeto único\n  let contenidos = [];\n  try {\n    const clean = raw.replace(/```json|```/g, '').trim();\n    const parsed = JSON.parse(clean);\n    // Normalizar siempre a array\n    contenidos = Array.isArray(parsed) ? parsed : [parsed];\n  } catch (e) {\n    items.push({ json: {\n      pagina: 'ERROR', empresa: item.json._fileId || '',\n      portavoz: '', categoria: 'ERROR_PARSE',\n      tipo_contenido: e.message, seccion_tematica: '',\n      ods: '', datos_clave: raw.substring(0, 300),\n      red_social: 'N/A', copy: 'ERROR: No se pudo parsear la respuesta de GPT-4o',\n      hashtags: '', url: '', imagen_url: imagenUrl,\n      fecha_generacion: new Date().toISOString().split('T')[0]\n    }});\n    continue;\n  }\n\n  for (const parsed of contenidos) {\n    if (!parsed.empresa) continue;\n\n    const url = parsed.url || (urlBase + parsed.pagina);\n    const odsStr = Array.isArray(parsed.ods) ? parsed.ods.map(o => 'ODS ' + o).join(', ') : (parsed.ods || '');\n    const datosStr = Array.isArray(parsed.datos_clave) ? parsed.datos_clave.join(' | ') : (parsed.datos_clave || '');\n    const hashtagsSector = Array.isArray(parsed.hashtags_sector) ? parsed.hashtags_sector.join(' ') : '';\n\n    const posts = [\n      { version: 'LinkedIn v1', copy: parsed.linkedin_1 },\n      { version: 'LinkedIn v2', copy: parsed.linkedin_2 },\n      { version: 'LinkedIn v3', copy: parsed.linkedin_3 }\n    ];\n\n    for (const p of posts) {\n      if (!p.copy) continue;\n      items.push({ json: {\n        pagina: parsed.pagina,\n        empresa: parsed.empresa,\n        portavoz: parsed.portavoz || '',\n        categoria: parsed.categoria,\n        tipo_contenido: parsed.tipo_contenido,\n        seccion_tematica: parsed.seccion_tematica,\n        ods: odsStr,\n        datos_clave: datosStr,\n        red_social: p.version,\n        copy: p.copy,\n        hashtags: hashtagsSector,\n        url: url,\n        imagen_url: imagenUrl,\n        fecha_generacion: new Date().toISOString().split('T')[0]\n      }});\n    }\n  }\n}\n\nif (items.length === 0) throw new Error('No se procesó ningún ítem correctamente.');\nreturn items;"
+      },
+      "id": "9f4aa64a-16e3-4275-9558-bd8e1c8d508e",
+      "name": "Code — Parse JSON + 3 filas por imagen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        44176,
+        11648
+      ],
+      "notes": "Convierte la respuesta de GPT-4o en 3 filas (LinkedIn, Twitter/X, Instagram) por cada imagen procesada. La diferencia clave respecto a Claude: lee choices[0].message.content en vez de content[0].text"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "rows",
+        "options": {}
+      },
+      "id": "d32c38e2-dcce-43eb-b0f0-e0fbe52a560f",
+      "name": "Aggregate — Fusionar todos los ítems",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        44400,
+        11648
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.first().json.rows || [];\n\nconst formatted = rows\n  .filter(r => r.pagina !== 'ERROR')\n  .map(r => ({\n    json: {\n      'Página': r.pagina,\n      'Empresa': r.empresa,\n      'Portavoz': r.portavoz,\n      'Categoría': r.categoria,\n      'Tipo de contenido': r.tipo_contenido,\n      'Sección temática': r.seccion_tematica,\n      'ODS': r.ods,\n      'Datos clave': r.datos_clave,\n      'Red social': r.red_social,\n      'Copy': r.copy,\n      'URL Imagen': r.imagen_url || '',\n      'Hashtags': r.hashtags,\n      'URL': r.url,\n      'Fecha generación': r.fecha_generacion\n    }\n  }));\n\nif (formatted.length === 0) {\n  throw new Error('No hay filas válidas para exportar.');\n}\n\nreturn formatted;"
+      },
+      "id": "8836c69b-4605-4a76-a223-c796367fc134",
+      "name": "Code — Formatear columnas Excel",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        44608,
+        11648
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "xlsx",
+        "options": {
+          "headerRow": true,
+          "sheetName": "Copys Anuario 2026"
+        }
+      },
+      "id": "d179deeb-72ae-4fbd-984f-4445bc5607ec",
+      "name": "Spreadsheet — Generar Excel",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 2,
+      "position": [
+        44832,
+        11648
+      ]
+    },
+    {
+      "parameters": {
+        "name": "={{ \n  (() => {\n    const hashtag = $('Form Trigger — Configuración').first().json['Hashtag de la publicación'].replace('#','');\n    const tipo = $('Form Trigger — Configuración').first().json['Tipo de contenido'];\n    const plurales = {\n      'Caso práctico': 'Casos_practicos',\n      'Ficha corporativa': 'Fichas_corporativas',\n      'Entrevista': 'Entrevistas',\n      'Artículo de opinión': 'Articulos_de_opinion',\n      'Buena Práctica Destacada': 'Buenas_Practicas_Destacadas'\n    };\n    const tipoPlural = plurales[tipo] || tipo.replace(/ /g,'_');\n    return hashtag + '_' + tipoPlural + '_' + $now.format('yyyy-MM-dd') + '.xlsx';\n  })()\n}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "mode": "id",
+          "value": "1rBeaxs5dmbOVjSO_dAkMiGhFH52DvSu1"
+        },
+        "options": {}
+      },
+      "id": "7d0a0db5-69f6-4b37-b090-4ea2f83087d2",
+      "name": "Drive — Guardar Excel",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        45056,
+        11648
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1wA279XwHu14WAjk",
+          "name": "Google Drive - Jordi Corresponsables"
+        }
+      },
+      "notes": "Reemplaza TU_FOLDER_OUTPUT_ID_AQUI con el ID de la carpeta donde quieres guardar el Excel resultante."
+    },
+    {
+      "parameters": {
+        "sendTo": "noticias@corresponsables.com",
+        "subject": "=✅ Copys {{ $('Form Trigger — Configuración').first().json['Hashtag de la publicación'] }} generados — {{ $now.format('dd/MM/yyyy') }}",
+        "message": "=<p>El agente ha generado correctamente los copys de redes sociales de: {{ $('Form Trigger — Configuración').first().json['Nombre de la publicación'] }} ({{ $('Form Trigger — Configuración').first().json['Hashtag de la publicación'] }})</p>",
+        "options": {}
+      },
+      "id": "a4f1893b-c459-403c-9c9d-6b735a749449",
+      "name": "Email — Notificar al equipo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        45280,
+        11648
+      ],
+      "webhookId": "64c11f99-efc6-459a-b8d6-b2af0e12ff27",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      },
+      "notes": "Opcional. Configura tus credenciales SMTP o usa el nodo de Gmail."
+    },
+    {
+      "parameters": {
+        "sendTo": "noticias@corresponsables.com",
+        "subject": "=❌ ERROR en Agente Copys de publicaciones — {{ $now.format('dd/MM/yyyy HH:mm') }}",
+        "message": "=<p>Se ha producido un error en el Agente Copys Anuario. Revisa el workflow en n8n.</p>",
+        "options": {}
+      },
+      "id": "eeb8af03-178d-4b62-bd5f-c2fd7df6d459",
+      "name": "Error Handler — Notificar fallo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        45520,
+        11648
+      ],
+      "webhookId": "346a749f-19ba-4b9c-97ff-c3ff4caf6b74",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Form Trigger — Configuración').first().json['Tipo de contenido'] }}",
+                    "rightValue": "Casos prácticos",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Casos prácticos"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Form Trigger — Configuración').first().json['Tipo de contenido'] }}",
+                    "rightValue": "Fichas corporativas",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Fichas corporativas"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Form Trigger — Configuración').first().json['Tipo de contenido'] }}",
+                    "rightValue": "Entrevistas",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Entrevistas"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Form Trigger — Configuración').first().json['Tipo de contenido'] }}",
+                    "rightValue": "Artículos de opinión",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Artículos de opinión"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Form Trigger — Configuración').first().json['Tipo de contenido'] }}",
+                    "rightValue": "Buenas Prácticas Destacadas",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Buenas Prácticas Destacadas"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Form Trigger — Configuración').first().json['Tipo de contenido'] }}",
+                    "rightValue": "Noticias o reportajes",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Noticias o reportajes"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "18827db5-1c74-44e5-b830-6628c6b951e4",
+      "name": "Switch — Tipo de contenido",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        43664,
+        11584
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parámetros del formulario\nconst hashtag = $('Form Trigger — Configuración').first().json['Hashtag de la publicación'] || '#21AnuarioCorresponsables';\nconst publicacion = $('Form Trigger — Configuración').first().json['Nombre de la publicación'] || 'Anuario Corresponsables 2026 (21ª edición)';\nconst urlBaseRaw = $('Form Trigger — Configuración').first().json['URL base de la publicación'] || 'https://publicaciones.corresponsables.com/publication/6f073ea8/';\nconst urlBase = urlBaseRaw.replace(/\\/?$/, '/') + '?p=';\n\nconst fileId = $input.item.json.id;\nconst imageUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;\n\nconst prompt = `Analiza la imagen adjunta, que es una página de: ${publicacion}.\n\nEl tipo de contenido es: caso práctico.\n\nEstructura los posts destacando las iniciativas E/S/G con datos concretos y el impacto medible conseguido por la empresa.\n\nPASO 1 — EXTRAE de la imagen:\n- Número de página (esquina inferior izquierda)\n- Nombre exacto de la empresa u organización\n- Cargo y nombre del portavoz citado (si aparece)\n- Categoría: Gran Empresa / PYME / Sociedad Civil / Mundo Académico / Comunicación Responsable\n- Datos clave: cifras, porcentajes, nombres de programas, hitos\n- ODS visibles en los iconos del pie de página\n- Sección temática: Social / Medioambiente / Gobernanza / Innovación / Otro\n- Iniciativas concretas mencionadas, clasificadas en E (Medioambiente), S (Social), G (Gobernanza)\n\nPASO 2 — GENERA 3 posts de LinkedIn DIFERENTES entre sí, todos en español, todos con emojis y hashtags.\n\nLos 3 deben empezar con esta línea:\n  · caso práctico empresa grande → \"Descubre el Caso Práctico #ESG de [EMPRESA] en el ${hashtag} 👉 [URL]\"\n\nPOST 1 — Formato bloques ESG:\n  · Cita del portavoz con emoji 🗣️ (si aparece en la imagen)\n  · Bloque 🌍 E – Medioambiente: 3-5 iniciativas con emoji + dato concreto cada una\n  · Bloque 🧑‍🤝‍🧑 S – Social: 3-5 iniciativas con emoji + dato concreto cada una\n  · Bloque 🏛️ G – Gobernanza: 2-3 iniciativas con emoji\n  · Cierre: \"Un gran ejemplo de cómo [SECTOR] puede liderar el cambio desde la sostenibilidad 🌱\"\n  · Línea final: \"Sigue toda la actualidad #ESG de [EMPRESA] en:\\\\n✅ ${hashtag} 👉 [URL]\"\n  · Hashtags en keywords relevantes del sector integrados en el texto (no al final)\n  · 200-250 palabras\n\nPOST 2 — Formato datos impacto:\n  · Foco en los números y cifras más impactantes\n  · Lista de 5-8 hitos con emoji delante y hashtag en la keyword clave\n  · Cita del portavoz en cursiva (si aparece)\n  · Cierre con pregunta retórica o reflexión\n  · Hashtags de sector al final\n  · 150-180 palabras\n\nPOST 3 — Formato narrativo:\n  · Tono más cercano y humano, cuenta la historia detrás de los datos\n  · Sin listas, solo párrafos cortos (2-3 líneas máx cada uno)\n  · 3-4 emojis máximo, bien colocados\n  · Hashtags integrados en el texto\n  · 150-170 palabras\n\nURL de referencia: ${urlBase}[NUMERO_PAGINA]\n\nIMPORTANTE — MÚLTIPLES CONTENIDOS POR PÁGINA:\nPuede haber 1 o 2 casos prácticos por página. Cada uno ocupa aproximadamente media página.\nDetecta todos los contenidos presentes y genera 3 posts para cada uno.\n\nDevuelve SOLO un array JSON con un objeto por cada contenido detectado (sin markdown, sin texto extra):\n[\n  {\n    \"pagina\": 178,\n    \"empresa\": \"Nombre empresa\",\n    \"portavoz\": \"Nombre, Cargo\",\n    \"categoria\": \"Gran Empresa\",\n    \"tipo_contenido\": \"caso práctico\",\n    \"seccion_tematica\": \"Social\",\n    \"ods\": [3, 4, 5],\n    \"datos_clave\": [\"dato1\", \"dato2\"],\n    \"url\": \"${urlBase}178\",\n    \"linkedin_1\": \"post 1...\",\n    \"linkedin_2\": \"post 2...\",\n    \"linkedin_3\": \"post 3...\",\n    \"hashtags_sector\": [\"#Sector1\", \"#ESG\"]\n  }\n]`;\n\n\nconst MAX_RETRIES = 3;\nconst RETRY_DELAY_MS = 3000;\n\nasync function callGPT() {\n  return await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://api.openai.com/v1/chat/completions',\n    headers: { 'Authorization': 'Bearer ' + $env.OPENAI_API_KEY },\n    body: {\n      model: 'gpt-4o',\n      max_tokens: 4000,\n      temperature: 0.5,\n      response_format: { type: 'json_object' },\n      messages: [\n        { role: 'system', content: 'Eres experto en comunicación ESG y copywriting para LinkedIn. Redactas posts de alto impacto para Corresponsables, el principal medio iberoamericano de RSC. Responde ÚNICAMENTE con JSON válido.' },\n        { role: 'user', content: [\n          { type: 'image_url', image_url: { url: imageUrl } },\n          { type: 'text', text: prompt }\n        ]}\n      ]\n    },\n    json: true\n  });\n}\n\nfunction wait(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\nlet lastError = null;\nfor (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {\n  try {\n    const result = await callGPT.call(this);\n    const content = result?.choices?.[0]?.message?.content;\n    if (!content) throw new Error('Respuesta vacía de GPT-4o');\n    JSON.parse(content.replace(/```json|```/g, '').trim());\n    result._fileId = fileId;\n    return { json: result };\n  } catch (e) {\n    lastError = e;\n    if (attempt < MAX_RETRIES) await wait(RETRY_DELAY_MS * attempt);\n  }\n}\n\nreturn { json: {\n  _error: true,\n  _errorMsg: lastError.message,\n  _fileId: fileId,\n  choices: [{ message: { content: '{}' } }]\n}};"
+      },
+      "id": "b2461f97-7314-4271-90df-c0a4a03aba97",
+      "name": "Code — GPT-4o Vision [Casos prácticos]",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        43952,
+        10912
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parámetros del formulario\nconst hashtag = $('Form Trigger — Configuración').first().json['Hashtag de la publicación'] || '#21AnuarioCorresponsables';\nconst publicacion = $('Form Trigger — Configuración').first().json['Nombre de la publicación'] || 'Anuario Corresponsables 2026 (21ª edición)';\nconst urlBaseRaw = $('Form Trigger — Configuración').first().json['URL base de la publicación'] || 'https://publicaciones.corresponsables.com/publication/6f073ea8/';\nconst urlBase = urlBaseRaw.replace(/\\/?$/, '/') + '?p=';\n\nconst fileId = $input.item.json.id;\nconst imageUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;\n\nconst prompt = `Analiza la imagen adjunta, que es una página de: ${publicacion}.\n\nEl tipo de contenido es: ficha corporativa.\n\nPresenta a la empresa u organización, su misión, sus valores y sus principales compromisos ESG. Presta especial atención a los servicios que ofrece, soluciones para otras empresas o formas de colaborar, e inclúyelos de forma destacada en los posts como llamada a la acción.\n\nPASO 1 — EXTRAE de la imagen:\n- Número de página (esquina inferior izquierda)\n- Nombre exacto de la empresa u organización\n- Cargo y nombre del portavoz citado (si aparece)\n- Categoría: Gran Empresa / PYME / Sociedad Civil / Mundo Académico / Comunicación Responsable\n- Datos clave: cifras, porcentajes, nombres de programas, hitos\n- ODS visibles en los iconos del pie de página\n- Sección temática: Social / Medioambiente / Gobernanza / Innovación / Otro\n- Iniciativas concretas mencionadas, clasificadas en E (Medioambiente), S (Social), G (Gobernanza)\n- Servicios ofrecidos, soluciones o formas de colaborar mencionadas (especialmente relevante en proveedores ESG y ONGs)\n\nPASO 2 — GENERA 3 posts de LinkedIn DIFERENTES entre sí, todos en español, todos con emojis y hashtags.\n\nLos 3 deben empezar con esta línea:\n  · ficha corporativa → \"Conoce a [EMPRESA] y su compromiso #ESG en el ${hashtag} 👉 [URL]\"\n\nPOST 1 — Formato bloques ESG:\n  · Cita del portavoz con emoji 🗣️ (si aparece en la imagen)\n  · Bloque 🌍 E – Medioambiente: 3-5 iniciativas con emoji + dato concreto cada una\n  · Bloque 🧑‍🤝‍🧑 S – Social: 3-5 iniciativas con emoji + dato concreto cada una\n  · Bloque 🏛️ G – Gobernanza: 2-3 iniciativas con emoji\n  · Cierre: \"Un gran ejemplo de cómo [SECTOR] puede liderar el cambio desde la sostenibilidad 🌱\"\n  · Línea final: \"Sigue toda la actualidad #ESG de [EMPRESA] en:\\\\n✅ ${hashtag} 👉 [URL]\"\n  · Hashtags en keywords relevantes del sector integrados en el texto (no al final)\n  · 200-250 palabras\n\nPOST 2 — Formato datos impacto:\n  · Foco en los números y cifras más impactantes\n  · Lista de 5-8 hitos con emoji delante y hashtag en la keyword clave\n  · Cita del portavoz en cursiva (si aparece)\n  · Si aparecen servicios o formas de colaborar, inclúyelos como llamada a la acción antes del cierre\n  · Cierre con pregunta retórica o reflexión\n  · Hashtags de sector al final\n  · 150-180 palabras\n\nPOST 3 — Formato narrativo:\n  · Tono más cercano y humano, cuenta la historia detrás de los datos\n  · Sin listas, solo párrafos cortos (2-3 líneas máx cada uno)\n  · 3-4 emojis máximo, bien colocados\n  · Si aparecen servicios o formas de colaborar, inclúyelos como llamada a la acción antes del cierre\n  · Hashtags integrados en el texto\n  · 150-170 palabras\n\nURL de referencia: ${urlBase}[NUMERO_PAGINA]\n\nIMPORTANTE — MÚLTIPLES CONTENIDOS POR PÁGINA:\nPuede haber entre 1 y 4 fichas corporativas por página.\nDetecta todos los contenidos presentes y genera 3 posts para cada uno.\n\nDevuelve SOLO un array JSON con un objeto por cada contenido detectado (sin markdown, sin texto extra):\n[\n  {\n    \"pagina\": 178,\n    \"empresa\": \"Nombre empresa\",\n    \"portavoz\": \"Nombre, Cargo\",\n    \"categoria\": \"Gran Empresa\",\n    \"tipo_contenido\": \"ficha corporativa\",\n    \"seccion_tematica\": \"Social\",\n    \"ods\": [3, 4, 5],\n    \"datos_clave\": [\"dato1\", \"dato2\"],\n    \"url\": \"${urlBase}178\",\n    \"linkedin_1\": \"post 1...\",\n    \"linkedin_2\": \"post 2...\",\n    \"linkedin_3\": \"post 3...\",\n    \"hashtags_sector\": [\"#Sector1\", \"#ESG\"]\n  }\n]`;\n\n\nconst MAX_RETRIES = 3;\nconst RETRY_DELAY_MS = 3000;\n\nasync function callGPT() {\n  return await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://api.openai.com/v1/chat/completions',\n    headers: { 'Authorization': 'Bearer ' + $env.OPENAI_API_KEY },\n    body: {\n      model: 'gpt-4o',\n      max_tokens: 4000,\n      temperature: 0.5,\n      response_format: { type: 'json_object' },\n      messages: [\n        { role: 'system', content: 'Eres experto en comunicación ESG y copywriting para LinkedIn. Redactas posts de alto impacto para Corresponsables, el principal medio iberoamericano de RSC. Responde ÚNICAMENTE con JSON válido.' },\n        { role: 'user', content: [\n          { type: 'image_url', image_url: { url: imageUrl } },\n          { type: 'text', text: prompt }\n        ]}\n      ]\n    },\n    json: true\n  });\n}\n\nfunction wait(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\nlet lastError = null;\nfor (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {\n  try {\n    const result = await callGPT.call(this);\n    const content = result?.choices?.[0]?.message?.content;\n    if (!content) throw new Error('Respuesta vacía de GPT-4o');\n    JSON.parse(content.replace(/```json|```/g, '').trim());\n    result._fileId = fileId;\n    return { json: result };\n  } catch (e) {\n    lastError = e;\n    if (attempt < MAX_RETRIES) await wait(RETRY_DELAY_MS * attempt);\n  }\n}\n\nreturn { json: {\n  _error: true,\n  _errorMsg: lastError.message,\n  _fileId: fileId,\n  choices: [{ message: { content: '{}' } }]\n}};"
+      },
+      "id": "a0278e32-7536-4f29-948e-b77616043ac3",
+      "name": "Code — GPT-4o Vision [Fichas corporativas]",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        43952,
+        11200
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parámetros del formulario\nconst hashtag = $('Form Trigger — Configuración').first().json['Hashtag de la publicación'] || '#21AnuarioCorresponsables';\nconst publicacion = $('Form Trigger — Configuración').first().json['Nombre de la publicación'] || 'Anuario Corresponsables 2026 (21ª edición)';\nconst urlBaseRaw = $('Form Trigger — Configuración').first().json['URL base de la publicación'] || 'https://publicaciones.corresponsables.com/publication/6f073ea8/';\nconst urlBase = urlBaseRaw.replace(/\\/?$/, '/') + '?p=';\n\nconst fileId = $input.item.json.id;\nconst imageUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;\n\nconst prompt = `Analiza la imagen adjunta, que es una página de: ${publicacion}.\n\nEl tipo de contenido es: entrevista.\n\nEl protagonista es la persona, no la empresa. Las citas textuales son el activo principal: úsalas como hilo conductor de los 3 posts.\n\nPASO 1 — EXTRAE de la imagen:\n- Número de página (esquina inferior izquierda)\n- Nombre exacto de la empresa u organización\n- Cargo y nombre del portavoz citado (si aparece)\n- Categoría: Gran Empresa / PYME / Sociedad Civil / Mundo Académico / Comunicación Responsable\n- Datos clave: cifras, porcentajes, nombres de programas, hitos\n- ODS visibles en los iconos del pie de página\n- Sección temática: Social / Medioambiente / Gobernanza / Innovación / Otro\n- Iniciativas concretas mencionadas, clasificadas en E (Medioambiente), S (Social), G (Gobernanza)\n- Citas textuales destacadas del portavoz (extrae las más potentes)\n\nPASO 2 — GENERA 3 posts de LinkedIn DIFERENTES entre sí, todos en español, todos con emojis y hashtags.\n\nLos 3 deben empezar con esta línea:\n  · \"Lee la entrevista con [PORTAVOZ] de [EMPRESA] en el ${hashtag} 👉 [URL]\"\n\nPOST 1 — Formato cita destacada:\n  · Abre con la cita más impactante del portavoz entre comillas, precedida de 🗣️\n  · Contextualiza brevemente quién es y por qué importa su visión\n  · 3-4 ideas clave extraídas de la entrevista, cada una con emoji\n  · Hashtags de sector integrados en el texto\n  · Cierre invitando a leer la entrevista completa\n  · 200-230 palabras\n\nPOST 2 — Formato pregunta-respuesta:\n  · Plantea 2-3 preguntas que responde la entrevista, con la respuesta resumida del portavoz\n  · Tono dinámico, como un adelanto que genera curiosidad\n  · Cita textual breve en cada bloque\n  · Hashtags al final\n  · 150-180 palabras\n\nPOST 3 — Formato perfil humano:\n  · Tono cercano, presenta al portavoz como persona antes que como cargo\n  · Sin listas, párrafos cortos (2-3 líneas máx)\n  · Destaca su visión personal sobre sostenibilidad o ESG\n  · 3-4 emojis máximo, bien colocados\n  · Hashtags integrados en el texto\n  · 150-170 palabras\n\nURL de referencia: ${urlBase}[NUMERO_PAGINA]\n\nIMPORTANTE — MÚLTIPLES CONTENIDOS POR PÁGINA:\nPuede haber entre 1 y 4 entrevistas por página.\nDetecta todos los contenidos presentes y genera 3 posts para cada uno.\n\nDevuelve SOLO un array JSON con un objeto por cada contenido detectado (sin markdown, sin texto extra):\n[\n  {\n    \"pagina\": 178,\n    \"empresa\": \"Nombre empresa\",\n    \"portavoz\": \"Nombre, Cargo\",\n    \"categoria\": \"Gran Empresa\",\n    \"tipo_contenido\": \"entrevista\",\n    \"seccion_tematica\": \"Social\",\n    \"ods\": [3, 4, 5],\n    \"datos_clave\": [\"dato1\", \"dato2\"],\n    \"url\": \"${urlBase}178\",\n    \"linkedin_1\": \"post 1...\",\n    \"linkedin_2\": \"post 2...\",\n    \"linkedin_3\": \"post 3...\",\n    \"hashtags_sector\": [\"#Sector1\", \"#ESG\"]\n  }\n]`;\n\n\nconst MAX_RETRIES = 3;\nconst RETRY_DELAY_MS = 3000;\n\nasync function callGPT() {\n  return await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://api.openai.com/v1/chat/completions',\n    headers: { 'Authorization': 'Bearer ' + $env.OPENAI_API_KEY },\n    body: {\n      model: 'gpt-4o',\n      max_tokens: 4000,\n      temperature: 0.5,\n      response_format: { type: 'json_object' },\n      messages: [\n        { role: 'system', content: 'Eres experto en comunicación ESG y copywriting para LinkedIn. Redactas posts de alto impacto para Corresponsables, el principal medio iberoamericano de RSC. Responde ÚNICAMENTE con JSON válido.' },\n        { role: 'user', content: [\n          { type: 'image_url', image_url: { url: imageUrl } },\n          { type: 'text', text: prompt }\n        ]}\n      ]\n    },\n    json: true\n  });\n}\n\nfunction wait(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\nlet lastError = null;\nfor (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {\n  try {\n    const result = await callGPT.call(this);\n    const content = result?.choices?.[0]?.message?.content;\n    if (!content) throw new Error('Respuesta vacía de GPT-4o');\n    JSON.parse(content.replace(/```json|```/g, '').trim());\n    result._fileId = fileId;\n    return { json: result };\n  } catch (e) {\n    lastError = e;\n    if (attempt < MAX_RETRIES) await wait(RETRY_DELAY_MS * attempt);\n  }\n}\n\nreturn { json: {\n  _error: true,\n  _errorMsg: lastError.message,\n  _fileId: fileId,\n  choices: [{ message: { content: '{}' } }]\n}};"
+      },
+      "id": "060edd89-1bd9-43f9-9c63-239404586caa",
+      "name": "Code — GPT-4o Vision [Entrevistas]",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        43952,
+        11504
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parámetros del formulario\nconst hashtag = $('Form Trigger — Configuración').first().json['Hashtag de la publicación'] || '#21AnuarioCorresponsables';\nconst publicacion = $('Form Trigger — Configuración').first().json['Nombre de la publicación'] || 'Anuario Corresponsables 2026 (21ª edición)';\nconst urlBaseRaw = $('Form Trigger — Configuración').first().json['URL base de la publicación'] || 'https://publicaciones.corresponsables.com/publication/6f073ea8/';\nconst urlBase = urlBaseRaw.replace(/\\/?$/, '/') + '?p=';\n\nconst fileId = $input.item.json.id;\nconst imageUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;\n\nconst prompt = `Analiza la imagen adjunta, que es una página de: ${publicacion}.\n\nEl tipo de contenido es: artículo de opinión.\n\nEl protagonista es el autor y su pensamiento. Destaca la tesis principal, los argumentos más potentes y la reflexión que invita a hacer. No es un caso de empresa: es una voz experta con criterio propio.\n\nPASO 1 — EXTRAE de la imagen:\n- Número de página (esquina inferior izquierda)\n- Nombre exacto de la empresa u organización\n- Cargo y nombre del portavoz citado (si aparece)\n- Categoría: Gran Empresa / PYME / Sociedad Civil / Mundo Académico / Comunicación Responsable\n- Datos clave: cifras, porcentajes, nombres de programas, hitos\n- ODS visibles en los iconos del pie de página\n- Sección temática: Social / Medioambiente / Gobernanza / Innovación / Otro\n- Iniciativas concretas mencionadas, clasificadas en E (Medioambiente), S (Social), G (Gobernanza)\n- Tesis principal del artículo\n- Argumentos o ideas clave desarrollados\n- Posición o propuesta concreta del autor (si la hay)\n\nPASO 2 — GENERA 3 posts de LinkedIn DIFERENTES entre sí, todos en español, todos con emojis y hashtags.\n\nLos 3 deben empezar con esta línea:\n  · \"Lee el artículo de opinión de [PORTAVOZ] en el ${hashtag} 👉 [URL]\"\n\nPOST 1 — Formato tesis + argumentos:\n  · Presenta la tesis principal como gancho de apertura\n  · 3-4 argumentos clave con emoji delante\n  · Cita textual del autor si aparece, con 🗣️\n  · Cierre con la propuesta o reflexión final del autor\n  · Hashtags de sector integrados en el texto\n  · 200-230 palabras\n\nPOST 2 — Formato provocación:\n  · Abre con una pregunta o afirmación provocadora extraída del artículo\n  · Desarrolla la tensión o el debate que plantea el autor\n  · Tono directo, con opinión, invita a reflexionar\n  · Hashtags al final\n  · 150-170 palabras\n\nPOST 3 — Formato cita + contexto:\n  · Abre con la cita más potente del autor entre comillas y con 🗣️\n  · Contextualiza brevemente quién es y por qué su opinión importa\n  · Sin listas, párrafos cortos (2-3 líneas máx)\n  · 3-4 emojis máximo\n  · Hashtags integrados en el texto\n  · 140-160 palabras\n\nURL de referencia: ${urlBase}[NUMERO_PAGINA]\n\nIMPORTANTE — MÚLTIPLES CONTENIDOS POR PÁGINA:\nPuede haber entre 1 y 4 artículos de opinión por página.\nDetecta todos los contenidos presentes y genera 3 posts para cada uno.\n\nDevuelve SOLO un array JSON con un objeto por cada contenido detectado (sin markdown, sin texto extra):\n[\n  {\n    \"pagina\": 178,\n    \"empresa\": \"Nombre empresa\",\n    \"portavoz\": \"Nombre, Cargo\",\n    \"categoria\": \"Gran Empresa\",\n    \"tipo_contenido\": \"artículo de opinión\",\n    \"seccion_tematica\": \"Social\",\n    \"ods\": [3, 4, 5],\n    \"datos_clave\": [\"dato1\", \"dato2\"],\n    \"url\": \"${urlBase}178\",\n    \"linkedin_1\": \"post 1...\",\n    \"linkedin_2\": \"post 2...\",\n    \"linkedin_3\": \"post 3...\",\n    \"hashtags_sector\": [\"#Sector1\", \"#ESG\"]\n  }\n]`;\n\n\nconst MAX_RETRIES = 3;\nconst RETRY_DELAY_MS = 3000;\n\nasync function callGPT() {\n  return await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://api.openai.com/v1/chat/completions',\n    headers: { 'Authorization': 'Bearer ' + $env.OPENAI_API_KEY },\n    body: {\n      model: 'gpt-4o',\n      max_tokens: 4000,\n      temperature: 0.5,\n      response_format: { type: 'json_object' },\n      messages: [\n        { role: 'system', content: 'Eres experto en comunicación ESG y copywriting para LinkedIn. Redactas posts de alto impacto para Corresponsables, el principal medio iberoamericano de RSC. Responde ÚNICAMENTE con JSON válido.' },\n        { role: 'user', content: [\n          { type: 'image_url', image_url: { url: imageUrl } },\n          { type: 'text', text: prompt }\n        ]}\n      ]\n    },\n    json: true\n  });\n}\n\nfunction wait(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\nlet lastError = null;\nfor (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {\n  try {\n    const result = await callGPT.call(this);\n    const content = result?.choices?.[0]?.message?.content;\n    if (!content) throw new Error('Respuesta vacía de GPT-4o');\n    JSON.parse(content.replace(/```json|```/g, '').trim());\n    result._fileId = fileId;\n    return { json: result };\n  } catch (e) {\n    lastError = e;\n    if (attempt < MAX_RETRIES) await wait(RETRY_DELAY_MS * attempt);\n  }\n}\n\nreturn { json: {\n  _error: true,\n  _errorMsg: lastError.message,\n  _fileId: fileId,\n  choices: [{ message: { content: '{}' } }]\n}};"
+      },
+      "id": "b8d576c2-33ec-406b-8eb4-ee8207544ecb",
+      "name": "Code — GPT-4o Vision [Artículos de opinión]",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        43952,
+        11808
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parámetros del formulario\nconst hashtag = $('Form Trigger — Configuración').first().json['Hashtag de la publicación'] || '#21AnuarioCorresponsables';\nconst publicacion = $('Form Trigger — Configuración').first().json['Nombre de la publicación'] || 'Anuario Corresponsables 2026 (21ª edición)';\nconst urlBaseRaw = $('Form Trigger — Configuración').first().json['URL base de la publicación'] || 'https://publicaciones.corresponsables.com/publication/6f073ea8/';\nconst urlBase = urlBaseRaw.replace(/\\/?$/, '/') + '?p=';\n\nconst fileId = $input.item.json.id;\nconst imageUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;\n\nconst prompt = `Analiza la imagen adjunta, que es una página de: ${publicacion}.\n\nEl tipo de contenido es: buena práctica destacada.\n\nExplica el problema o reto que resuelve la práctica, cómo se implementó y el impacto medible conseguido. Ten en cuenta que la práctica puede centrarse en una sola área (E, S o G), no necesariamente en las tres.\n\nPASO 1 — EXTRAE de la imagen:\n- Número de página (esquina inferior izquierda)\n- Nombre exacto de la empresa u organización\n- Cargo y nombre del portavoz citado (si aparece)\n- Categoría: Gran Empresa / PYME / Sociedad Civil / Mundo Académico / Comunicación Responsable\n- Datos clave: cifras, porcentajes, nombres de programas, hitos\n- ODS visibles en los iconos del pie de página\n- Sección temática: Social / Medioambiente / Gobernanza / Innovación / Otro\n- Iniciativas concretas mencionadas, clasificadas en E (Medioambiente), S (Social), G (Gobernanza)\n\nPASO 2 — GENERA 3 posts de LinkedIn DIFERENTES entre sí, todos en español, todos con emojis y hashtags.\n\nLos 3 deben empezar con esta línea:\n  · \"Descubre la Buena Práctica Destacada de [EMPRESA] en el ${hashtag} 👉 [URL]\"\n\nPOST 1 — Formato bloques ESG:\n  · Cita del portavoz con emoji 🗣️ (si aparece en la imagen)\n  · Incluye solo los bloques ESG que aparezcan en la práctica (no es obligatorio que estén los 3):\n    - 🌍 E – Medioambiente: iniciativas con emoji + dato concreto (si aplica)\n    - 🧑‍🤝‍🧑 S – Social: iniciativas con emoji + dato concreto (si aplica)\n    - 🏛️ G – Gobernanza: iniciativas con emoji (si aplica)\n  · Cierre: \"Un gran ejemplo de cómo [SECTOR] puede liderar el cambio desde la sostenibilidad 🌱\"\n  · Línea final: \"Sigue toda la actualidad #ESG de [EMPRESA] en:\\\\n✅ ${hashtag} 👉 [URL]\"\n  · Hashtags en keywords relevantes del sector integrados en el texto (no al final)\n  · 200-250 palabras\n\nPOST 2 — Formato datos impacto:\n  · Foco en los números y cifras más impactantes\n  · Lista de 5-8 hitos con emoji delante y hashtag en la keyword clave\n  · Cita del portavoz en cursiva (si aparece)\n  · Cierre con pregunta retórica o reflexión\n  · Hashtags de sector al final\n  · 150-180 palabras\n\nPOST 3 — Formato narrativo:\n  · Tono más cercano y humano, cuenta la historia detrás de los datos\n  · Sin listas, solo párrafos cortos (2-3 líneas máx cada uno)\n  · 3-4 emojis máximo, bien colocados\n  · Hashtags integrados en el texto\n  · 150-170 palabras\n\nURL de referencia: ${urlBase}[NUMERO_PAGINA]\n\nIMPORTANTE — MÚLTIPLES CONTENIDOS POR PÁGINA:\nPuede haber 1 o 2 buenas prácticas destacadas por página. Ocupan aproximadamente un tercio de página cada una y están rodeadas de otras buenas prácticas más pequeñas de un solo párrafo. Procesa ÚNICAMENTE las buenas prácticas destacadas, ignorando el resto de contenidos pequeños de la página.\nDetecta todos los contenidos presentes y genera 3 posts para cada uno.\n\nDevuelve SOLO un array JSON con un objeto por cada contenido detectado (sin markdown, sin texto extra):\n[\n  {\n    \"pagina\": 178,\n    \"empresa\": \"Nombre empresa\",\n    \"portavoz\": \"Nombre, Cargo\",\n    \"categoria\": \"Gran Empresa\",\n    \"tipo_contenido\": \"buena práctica destacada\",\n    \"seccion_tematica\": \"Social\",\n    \"ods\": [3, 4, 5],\n    \"datos_clave\": [\"dato1\", \"dato2\"],\n    \"url\": \"${urlBase}178\",\n    \"linkedin_1\": \"post 1...\",\n    \"linkedin_2\": \"post 2...\",\n    \"linkedin_3\": \"post 3...\",\n    \"hashtags_sector\": [\"#Sector1\", \"#ESG\"]\n  }\n]`;\n\n\nconst MAX_RETRIES = 3;\nconst RETRY_DELAY_MS = 3000;\n\nasync function callGPT() {\n  return await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://api.openai.com/v1/chat/completions',\n    headers: { 'Authorization': 'Bearer ' + $env.OPENAI_API_KEY },\n    body: {\n      model: 'gpt-4o',\n      max_tokens: 4000,\n      temperature: 0.5,\n      response_format: { type: 'json_object' },\n      messages: [\n        { role: 'system', content: 'Eres experto en comunicación ESG y copywriting para LinkedIn. Redactas posts de alto impacto para Corresponsables, el principal medio iberoamericano de RSC. Responde ÚNICAMENTE con JSON válido.' },\n        { role: 'user', content: [\n          { type: 'image_url', image_url: { url: imageUrl } },\n          { type: 'text', text: prompt }\n        ]}\n      ]\n    },\n    json: true\n  });\n}\n\nfunction wait(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\nlet lastError = null;\nfor (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {\n  try {\n    const result = await callGPT.call(this);\n    const content = result?.choices?.[0]?.message?.content;\n    if (!content) throw new Error('Respuesta vacía de GPT-4o');\n    JSON.parse(content.replace(/```json|```/g, '').trim());\n    result._fileId = fileId;\n    return { json: result };\n  } catch (e) {\n    lastError = e;\n    if (attempt < MAX_RETRIES) await wait(RETRY_DELAY_MS * attempt);\n  }\n}\n\nreturn { json: {\n  _error: true,\n  _errorMsg: lastError.message,\n  _fileId: fileId,\n  choices: [{ message: { content: '{}' } }]\n}};"
+      },
+      "id": "6a064ac5-f5a7-4c89-b3f0-d279a2587ea8",
+      "name": "Code — GPT-4o Vision [Buenas Prácticas Destacadas]",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        43952,
+        12112
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parámetros del formulario\nconst hashtag = $('Form Trigger — Configuración').first().json['Hashtag de la publicación'] || '#21AnuarioCorresponsables';\nconst publicacion = $('Form Trigger — Configuración').first().json['Nombre de la publicación'] || 'Anuario Corresponsables 2026 (21ª edición)';\nconst urlBaseRaw = $('Form Trigger — Configuración').first().json['URL base de la publicación'] || 'https://publicaciones.corresponsables.com/publication/6f073ea8/';\nconst urlBase = urlBaseRaw.replace(/\\/?$/, '/') + '?p=';\n\nconst fileId = $input.item.json.id;\nconst imageUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;\n\nconst prompt = `Analiza la imagen adjunta, que es una página de: ${publicacion}.\n\nEl tipo de contenido es: noticia o reportaje.\n\nEnfoque periodístico: responde al qué, quién, cuándo y por qué importa. El gancho informativo es lo primero. Puede no haber empresa protagonista clara, sino un tema o tendencia.\n\nPASO 1 — EXTRAE de la imagen:\n- Número de página (esquina inferior izquierda)\n- Nombre exacto de la empresa u organización\n- Cargo y nombre del portavoz citado (si aparece)\n- Categoría: Gran Empresa / PYME / Sociedad Civil / Mundo Académico / Comunicación Responsable\n- Datos clave: cifras, porcentajes, nombres de programas, hitos\n- ODS visibles en los iconos del pie de página\n- Sección temática: Social / Medioambiente / Gobernanza / Innovación / Otro\n- Iniciativas concretas mencionadas, clasificadas en E (Medioambiente), S (Social), G (Gobernanza)\n- Titular o idea noticiosa principal\n- Contexto o relevancia del tema tratado\n\nPASO 2 — GENERA 3 posts de LinkedIn DIFERENTES entre sí, todos en español, todos con emojis y hashtags.\n\nLos 3 deben empezar con esta línea:\n  · \"No te pierdas este reportaje sobre [TEMA/EMPRESA] en el ${hashtag} 👉 [URL]\"\n\nPOST 1 — Formato titular + contexto:\n  · Abre con el titular más impactante de la noticia como gancho\n  · Explica el contexto y por qué es relevante ahora\n  · 3-4 puntos clave con emoji\n  · Cita del portavoz con 🗣️ si aparece\n  · Hashtags integrados en el texto\n  · Cierre con llamada a leer el reportaje completo\n  · 200-230 palabras\n\nPOST 2 — Formato datos noticia:\n  · Abre con el dato o cifra más impactante\n  · Lista de 5-7 puntos clave de la noticia con emoji\n  · Tono informativo y directo\n  · Pregunta de reflexión al cierre\n  · Hashtags al final\n  · 150-170 palabras\n\nPOST 3 — Formato por qué importa:\n  · Sin listas, párrafos cortos (2-3 líneas máx)\n  · Explica la relevancia del tema para el sector y la sociedad\n  · Tono más analítico y reflexivo\n  · 3-4 emojis máximo\n  · Hashtags integrados en el texto\n  · 140-160 palabras\n\nURL de referencia: ${urlBase}[NUMERO_PAGINA]\n\nIMPORTANTE — MÚLTIPLES CONTENIDOS POR PÁGINA:\nPuede haber entre 1 y 4 noticias o reportajes por página.\nDetecta todos los contenidos presentes y genera 3 posts para cada uno.\n\nDevuelve SOLO un array JSON con un objeto por cada contenido detectado (sin markdown, sin texto extra):\n[\n  {\n    \"pagina\": 178,\n    \"empresa\": \"Nombre empresa\",\n    \"portavoz\": \"Nombre, Cargo\",\n    \"categoria\": \"Gran Empresa\",\n    \"tipo_contenido\": \"noticia o reportaje\",\n    \"seccion_tematica\": \"Social\",\n    \"ods\": [3, 4, 5],\n    \"datos_clave\": [\"dato1\", \"dato2\"],\n    \"url\": \"${urlBase}178\",\n    \"linkedin_1\": \"post 1...\",\n    \"linkedin_2\": \"post 2...\",\n    \"linkedin_3\": \"post 3...\",\n    \"hashtags_sector\": [\"#Sector1\", \"#ESG\"]\n  }\n]`;\n\n\nconst MAX_RETRIES = 3;\nconst RETRY_DELAY_MS = 3000;\n\nasync function callGPT() {\n  return await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://api.openai.com/v1/chat/completions',\n    headers: { 'Authorization': 'Bearer ' + $env.OPENAI_API_KEY },\n    body: {\n      model: 'gpt-4o',\n      max_tokens: 4000,\n      temperature: 0.5,\n      response_format: { type: 'json_object' },\n      messages: [\n        { role: 'system', content: 'Eres experto en comunicación ESG y copywriting para LinkedIn. Redactas posts de alto impacto para Corresponsables, el principal medio iberoamericano de RSC. Responde ÚNICAMENTE con JSON válido.' },\n        { role: 'user', content: [\n          { type: 'image_url', image_url: { url: imageUrl } },\n          { type: 'text', text: prompt }\n        ]}\n      ]\n    },\n    json: true\n  });\n}\n\nfunction wait(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\nlet lastError = null;\nfor (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {\n  try {\n    const result = await callGPT.call(this);\n    const content = result?.choices?.[0]?.message?.content;\n    if (!content) throw new Error('Respuesta vacía de GPT-4o');\n    JSON.parse(content.replace(/```json|```/g, '').trim());\n    result._fileId = fileId;\n    return { json: result };\n  } catch (e) {\n    lastError = e;\n    if (attempt < MAX_RETRIES) await wait(RETRY_DELAY_MS * attempt);\n  }\n}\n\nreturn { json: {\n  _error: true,\n  _errorMsg: lastError.message,\n  _fileId: fileId,\n  choices: [{ message: { content: '{}' } }]\n}};"
+      },
+      "id": "fbd129b0-a411-4ee7-a31f-09d4b7fd082e",
+      "name": "Code — GPT-4o Vision [Noticias o reportajes]",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        43952,
+        12400
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "files",
+        "options": {}
+      },
+      "id": "c0f3478c-cf6e-4745-b67f-148ab068c340",
+      "name": "Split — Separar archivos",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        43216,
+        11648
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.name }}",
+              "rightValue": ".processed",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4391ec0e-0542-4377-88b4-457575b9ba00",
+      "name": "Filtrar — solo no procesadas",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        43440,
+        11648
+      ],
+      "notes": "Evita reprocesar imágenes ya tratadas. Opcional: puedes mover los archivos a una subcarpeta /procesadas/ tras cada ejecución."
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ \"'\" + (($('Form Trigger — Configuración').first().json['ID de subcarpeta de Google Drive'] || '').trim() || '1rBeaxs5dmbOVjSO_dAkMiGhFH52DvSu1') + \"' in parents and mimeType contains 'image/' and trashed = false\" }}"
+            },
+            {
+              "name": "fields",
+              "value": "files(id,name,mimeType,modifiedTime)"
+            },
+            {
+              "name": "pageSize",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e5a88f00-de8e-430f-9117-b3cedba3d572",
+      "name": "Drive — Listar imágenes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        42992,
+        11648
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1wA279XwHu14WAjk",
+          "name": "Google Drive - Jordi Corresponsables"
+        }
+      },
+      "notes": "Reemplaza TU_FOLDER_ID_AQUI con el ID de la carpeta de Drive que contiene las imágenes exportadas por la diseñadora."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Form Trigger — Configuración": {
+      "main": [
+        [
+          {
+            "node": "Drive — Listar imágenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — Parse JSON + 3 filas por imagen": {
+      "main": [
+        [
+          {
+            "node": "Aggregate — Fusionar todos los ítems",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate — Fusionar todos los ítems": {
+      "main": [
+        [
+          {
+            "node": "Code — Formatear columnas Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — Formatear columnas Excel": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet — Generar Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet — Generar Excel": {
+      "main": [
+        [
+          {
+            "node": "Drive — Guardar Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive — Guardar Excel": {
+      "main": [
+        [
+          {
+            "node": "Email — Notificar al equipo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch — Tipo de contenido": {
+      "main": [
+        [
+          {
+            "node": "Code — GPT-4o Vision [Casos prácticos]",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code — GPT-4o Vision [Fichas corporativas]",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code — GPT-4o Vision [Entrevistas]",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code — GPT-4o Vision [Artículos de opinión]",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code — GPT-4o Vision [Buenas Prácticas Destacadas]",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code — GPT-4o Vision [Noticias o reportajes]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — GPT-4o Vision [Casos prácticos]": {
+      "main": [
+        [
+          {
+            "node": "Code — Parse JSON + 3 filas por imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — GPT-4o Vision [Fichas corporativas]": {
+      "main": [
+        [
+          {
+            "node": "Code — Parse JSON + 3 filas por imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — GPT-4o Vision [Entrevistas]": {
+      "main": [
+        [
+          {
+            "node": "Code — Parse JSON + 3 filas por imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — GPT-4o Vision [Artículos de opinión]": {
+      "main": [
+        [
+          {
+            "node": "Code — Parse JSON + 3 filas por imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — GPT-4o Vision [Buenas Prácticas Destacadas]": {
+      "main": [
+        [
+          {
+            "node": "Code — Parse JSON + 3 filas por imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code — GPT-4o Vision [Noticias o reportajes]": {
+      "main": [
+        [
+          {
+            "node": "Code — Parse JSON + 3 filas por imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split — Separar archivos": {
+      "main": [
+        [
+          {
+            "node": "Filtrar — solo no procesadas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar — solo no procesadas": {
+      "main": [
+        [
+          {
+            "node": "Switch — Tipo de contenido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive — Listar imágenes": {
+      "main": [
+        [
+          {
+            "node": "Split — Separar archivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "fa2ace80-2061-4db2-bc86-a05bdaedcea5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4be3cf3d35b85ad6682e04988a9bb06bcccdd4b45325e52bbf853c7cfe8fce64"
+  },
+  "id": "6WGrA7JNIsnz5Zk2",
+  "tags": [
+    {
+      "updatedAt": "2026-05-26T13:48:48.681Z",
+      "createdAt": "2026-05-26T13:48:48.681Z",
+      "id": "2cvv02DiX0QLA0PF",
+      "name": "redaccional"
+    }
+  ]
+}

@@ -118,8 +118,8 @@
     {
       "parameters": {
         "content": "## 🔵 BLOQUE 1 — Entrada de emails y preprocesado de adjuntos ✅\nRecepción de emails desde Gmail y filtrado inicial de contenido procesable, con separación y clasificación de adjuntos.\n\n\nIncluye:\n- Lectura de correos\n- Descarga de adjuntos\n- Filtro por asunto (NP, NdP, artículo, entrevista, etc.)\n- Descarte de emails no relevantes\n- Split de adjuntos en items individuales\n- Identificación de documentos vs imágenes\n- Selección del documento principal a procesar\n- Identificación PDF / DOCX / DOC\n- Enrutamiento hacia el flujo de procesamiento",
-        "height": 800,
-        "width": 1504
+        "height": 768,
+        "width": 1536
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -134,7 +134,7 @@
       "parameters": {
         "content": "## 🧠 BLOQUE 2 — Procesamiento de contenidos y adjuntos\nProcesamiento editorial del contenido mediante IA.\n\nIncluye:\n- Procesado estructurado de textos (con IA), archivos de texto e imágenes\n- Control de calidad\n",
         "height": 1264,
-        "width": 1680
+        "width": 1440
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -149,12 +149,12 @@
       "parameters": {
         "content": "## 🟢 BLOQUE 3 — Subida de contenidos y actualización final\nGestión de archivos y cierre del proceso.\n\nIncluye:\n- Creación del registro principal en Airtable con los datos procesados.\n- Subida de documentos e imágenes a Airtable\n- Actualización del estado del registro",
         "height": 832,
-        "width": 2368
+        "width": 1936
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1552,
-        432
+        1328,
+        160
       ],
       "typeVersion": 1,
       "id": "1972632f-9605-4427-9ace-68320fb75ab1",
@@ -197,8 +197,8 @@
       "type": "n8n-nodes-base.editImage",
       "typeVersion": 1,
       "position": [
-        2464,
-        1040
+        2240,
+        768
       ],
       "id": "2d672b87-ea07-4d78-803a-e80f82d84ac0",
       "name": "Imagen — Redimensionar a 1005x475 WebP"
@@ -272,7 +272,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -1120,
+        -736,
         688
       ],
       "id": "4ea8e44e-b015-43fb-a412-4860c62ad4f6",
@@ -285,8 +285,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -720,
-        320
+        -656,
+        416
       ],
       "id": "be10c455-e806-4647-9c02-55662d0af586",
       "name": "Code — Seleccionar primer documento válido"
@@ -377,8 +377,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3,
       "position": [
-        -528,
-        304
+        -480,
+        400
       ],
       "id": "f0b4a114-9df0-4fc2-aefb-b50c75fd91a3",
       "name": "Switch — Tipo de documento"
@@ -963,8 +963,8 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2,
       "position": [
-        1632,
-        672
+        1408,
+        400
       ],
       "id": "b1faf47f-12a0-466b-abb4-6f8dd4ab67e3",
       "name": "Airtable — Crear registro",
@@ -982,8 +982,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        1840,
-        832
+        1616,
+        560
       ],
       "id": "98933c85-ce0d-4168-bebf-bda8667aaf8b",
       "name": "Merge — Registro + adjuntos"
@@ -1016,8 +1016,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2272,
-        688
+        2048,
+        416
       ],
       "id": "e580fabf-f577-4f91-bd8b-4d70f9eccc02",
       "name": "Airtable — Subir documento PDF",
@@ -1515,8 +1515,8 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        3280,
-        880
+        3056,
+        608
       ],
       "id": "430f8e2b-b8b3-4c16-8143-dd119f3d0b99",
       "name": "Airtable — Actualizar estado a En Revisión",
@@ -1535,8 +1535,8 @@
       "type": "n8n-nodes-base.limit",
       "typeVersion": 1,
       "position": [
-        2272,
-        1040
+        2048,
+        768
       ],
       "id": "afefcbd1-7d25-48be-8b31-bceea909d60a",
       "name": "Limit — Primera imagen válida"
@@ -1733,8 +1733,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        3072,
-        864
+        2848,
+        592
       ],
       "id": "f2f3fa3e-74d0-4e9e-8b77-1d182553d4fc",
       "name": "Merge — Esperar adjuntos subidos"
@@ -1746,8 +1746,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2048,
-        688
+        1824,
+        416
       ],
       "id": "18a0f33e-a495-4566-8d02-eaaf95189cb4",
       "name": "Code — Preparar PDF para subida"
@@ -1759,8 +1759,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2032,
-        960
+        1808,
+        688
       ],
       "id": "95372628-d77d-41c1-8b39-458f7b91203f",
       "name": "Code — Preparar imagen para subida"
@@ -1793,8 +1793,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2272,
-        880
+        2048,
+        608
       ],
       "id": "d83428d0-266e-4ba1-859e-d76cefc4f7a8",
       "name": "Airtable — Subir imagen original",
@@ -1833,8 +1833,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2864,
-        1040
+        2640,
+        768
       ],
       "id": "225af508-abe0-48b8-9462-3b5659fc4f2b",
       "name": "Airtable — Subir imagen WP",
@@ -1852,8 +1852,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2656,
-        1040
+        2432,
+        768
       ],
       "id": "fdd49d58-6c8a-4b44-bbd3-ea34622f678b",
       "name": "Code — Preparar imagen WP para subida"
@@ -1872,8 +1872,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5344,
-        880
+        4672,
+        608
       ],
       "id": "55cf5e5a-6a00-4fb4-8c11-14f435834a87",
       "name": "Update Post w/ IMG",
@@ -1908,8 +1908,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4512,
-        880
+        3840,
+        608
       ],
       "id": "ed41d109-fa6e-46de-875a-e78ff1c326d8",
       "name": "Upload IMG to WP Media",
@@ -1927,8 +1927,8 @@
       "type": "n8n-nodes-base.limit",
       "typeVersion": 1,
       "position": [
-        4912,
-        880
+        4240,
+        608
       ],
       "id": "be1a3faa-86d1-42e1-b7cb-bcc874a62bcc",
       "name": "Limit2",
@@ -1946,8 +1946,8 @@
       "type": "n8n-nodes-base.wordpress",
       "typeVersion": 1,
       "position": [
-        5136,
-        880
+        4464,
+        608
       ],
       "id": "930a32f4-b588-4326-901b-3d244a0ab7f4",
       "name": "Create a Post",
@@ -2446,8 +2446,8 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        6176,
-        880
+        5504,
+        608
       ],
       "id": "e97cfc67-fa2c-49ff-8c49-f0d47750404d",
       "name": "Status: Borrador creado en WP",
@@ -2465,8 +2465,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        5552,
-        880
+        4880,
+        608
       ],
       "id": "8d2da410-530f-4943-abf2-9ff2e4b6a7ae",
       "name": "Create/Add Tags"
@@ -2485,8 +2485,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4704,
-        880
+        4032,
+        608
       ],
       "id": "cc245b9a-6280-47f4-83fa-00a2fcc43673",
       "name": "Add Alt text to IMG",
@@ -2507,8 +2507,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        4064,
-        432
+        3392,
+        160
       ],
       "typeVersion": 1,
       "id": "e429e907-6074-4775-8d5a-28d0a80ac5d6",
@@ -2521,8 +2521,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        5760,
-        880
+        5088,
+        608
       ],
       "id": "759bfddf-138f-4fac-b725-11607f3ec2a6",
       "name": "Map — Categorías a IDs WordPress"
@@ -2553,8 +2553,8 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        4128,
-        880
+        3456,
+        608
       ],
       "id": "cdfc3c82-b97d-41e9-b650-08301b95bde2",
       "name": "Get a record",
@@ -2572,8 +2572,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        5968,
-        880
+        5296,
+        608
       ],
       "id": "dfb002c7-5d2f-49dc-a0e9-15eb79d7f8af",
       "name": "Update post fields"
@@ -2587,8 +2587,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4304,
-        880
+        3632,
+        608
       ],
       "onError": "continueRegularOutput"
     },
@@ -2603,8 +2603,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        3488,
-        880
+        -928,
+        240
       ],
       "id": "5b4fdbed-a84a-408c-bb2e-7baf43e7d7c8",
       "name": "Gmail — Añadir etiqueta 'Publicando'",
@@ -2627,8 +2627,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        3728,
-        880
+        -736,
+        240
       ],
       "id": "00dbf420-287f-4974-87e8-88aa4007b709",
       "name": "Gmail — Quitar etiqueta 'Publicar'",
@@ -2651,8 +2651,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        6384,
-        880
+        5712,
+        608
       ],
       "id": "405038d8-8136-40a9-b535-ae3fbc3365bc",
       "name": "Gmail — Añadir etiqueta 'Publicado'",
@@ -2675,8 +2675,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        6576,
-        880
+        5904,
+        608
       ],
       "id": "ca862749-5a26-489e-a823-140eb3f6fba5",
       "name": "Gmail — Quitar etiqueta 'Publicando'",
@@ -2700,7 +2700,7 @@
       "typeVersion": 2.2,
       "position": [
         -1120,
-        288
+        240
       ],
       "id": "98c355d5-15ec-42e4-8e61-f914311f698e",
       "name": "Gmail — Marcar como leído",
@@ -2777,11 +2777,11 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "categoriaNAE",
+                    "leftValue": "={{ $json.message.content.categoriaNAE }}",
                     "rightValue": "Noticias",
                     "operator": {
                       "type": "string",
-                      "operation": "equals"
+                      "operation": "contains"
                     },
                     "id": "00679d84-78bf-4729-aa12-b5961bd3f877"
                   }
@@ -2802,12 +2802,11 @@
                 "conditions": [
                   {
                     "id": "0811ffcd-1b84-4ef7-a161-4b389bfb11d6",
-                    "leftValue": "categoriaNAE",
+                    "leftValue": "={{ $json.message.content.categoriaNAE }}",
                     "rightValue": "Opinión",
                     "operator": {
                       "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
+                      "operation": "contains"
                     }
                   }
                 ],
@@ -2827,12 +2826,11 @@
                 "conditions": [
                   {
                     "id": "3af2edab-b89f-4e91-9c6e-16472c6c2bce",
-                    "leftValue": "categoriaNAE",
+                    "leftValue": "={{ $json.message.content.categoriaNAE }}",
                     "rightValue": "Entrevistas",
                     "operator": {
                       "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
+                      "operation": "contains"
                     }
                   }
                 ],
@@ -2843,9 +2841,7 @@
             }
           ]
         },
-        "options": {
-          "fallbackOutput": 0
-        }
+        "options": {}
       },
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
@@ -2858,19 +2854,6 @@
     },
     {
       "parameters": {
-        "numberInputs": 3
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        1264,
-        176
-      ],
-      "id": "dfb192dc-9bfd-40f6-82f9-38f84878ad61",
-      "name": "Merge"
-    },
-    {
-      "parameters": {
         "modelId": {
           "__rl": true,
           "value": "gpt-4.1-mini",
@@ -2880,7 +2863,7 @@
         "messages": {
           "values": [
             {
-              "content": "Eres un asistente experto en redacción periodística de Corresponsables, medio especializado en RSE, sostenibilidad, ESG y comunicación responsable.\n\nTu tarea es generar contenido editorial y metadatos SEO a partir de una ENTREVISTA previamente estructurada y validada.\n\nEl formato entrevista tiene características propias: el protagonismo recae en el entrevistado, sus declaraciones son el activo principal del contenido, y el titular debe capturar su voz, no describir la acción.\n\n---\n\n## Contexto de entrada\n\nRecibirás:\n\n- titulo → título original del documento (puede estar vacío o no ser un título real)\n- contenidoHTMLValidado → contenido limpio y fiel al original, en formato preguntas/respuestas\n- empresaValidada → organización protagonista confirmada\n- categoriaNAE, categoriaESG, categoriaODS, pais, remitente\n\nDebes usar estos datos como única fuente de verdad.\n\n---\n\n## Objetivo\n\nGenerar:\n\n- tituloESG\n- subtitulo\n- descripcion\n- slug\n- extracto\n- highlights\n- etiquetas\n\n---\n\n## Reglas generales\n\n### Formato\n\n- Devuelve únicamente un JSON válido\n- No añadas explicaciones, comentarios ni texto fuera del JSON\n- No dejes campos vacíos ni incompletos\n- No incluyas caracteres inválidos que puedan romper el JSON\n- Si necesitas comillas dentro del contenido generado, usa comillas simples\n- Asegúrate de que el JSON es correcto, completo y sin errores de sintaxis\n\n### Uso del contenido\n\n- Basa TODO en `contenidoHTMLValidado` y `titulo`\n- No inventes información\n- No introduzcas datos no presentes en el contenido\n- No contradigas el contenido original\n\n### Coherencia\n\n- Todos los campos deben ser coherentes entre sí\n- Evita duplicar información\n- Evita repetir estructuras sintácticas similares entre campos (especialmente entre tituloESG, subtitulo y descripcion)\n- Cada campo debe aportar valor propio y complementario\n\n---\n\n## Estilo Corresponsables\n\n- Tono periodístico, informativo, profesional y creíble\n- Prioriza claridad, precisión y relevancia informativa\n- Lenguaje claro, preciso y sin exageraciones\n- Sin tono promocional ni publicitario\n- Sin clickbait ni polarización\n- Prioriza impacto ESG\n- Destaca el valor de las declaraciones del entrevistado\n\n---\n\n## 1. tituloESG\n\nExtrae una declaración relevante y literal que el entrevistado haya dicho en el contenido.\n\n### Reglas\n- Debe ser texto real presente en `contenidoHTMLValidado`, no una paráfrasis\n- No inventar ni reformular bajo ningún concepto\n- Debe ser periodísticamente potente: una afirmación clara, un dato concreto o una posición definida\n- Evita declaraciones vagas o genéricas (\"creemos en la sostenibilidad\", \"apostamos por las personas\"…)\n- Prioriza declaraciones con cifras, compromisos concretos o posiciones firmes\n- Si la declaración supera las 16 palabras, recórtala por el final conservando el sentido, sin alterar las palabras iniciales\n\n### Ejemplos\nDeclaración original: \"Hemos reducido un 40% nuestras emisiones en los últimos tres años y vamos a llegar a cero neto antes de 2030\"\ntituloESG: \"Hemos reducido un 40% nuestras emisiones en los últimos tres años\"\n\nDeclaración original: \"La diversidad no es una política de RRHH, es una ventaja competitiva que ya nos está dando resultados\"\ntituloESG: \"La diversidad no es una política de RRHH, es una ventaja competitiva\"\n\n---\n\n## 2. subtitulo\n\nUsa exactamente este formato:\n\"Entrevistamos a [nombre y apellidos], [cargo] de [nombre de la empresa]\"\n\n- Extrae nombre, cargo y empresa del contenido o de `empresaValidada`\n- No añadas ningún texto adicional fuera de este formato\n- Si el cargo no está disponible en el contenido, usa: \"Entrevistamos a [nombre y apellidos] de [nombre de la empresa]\"\n- Si el nombre no está disponible, usa: \"Entrevistamos a [nombre de la empresa]\"\n\n---\n\n## 3. descripcion\n\n- Máximo 160 caracteres (ideal entre 140–155)\n- Debe resumir el tema central de la entrevista y el perfil del entrevistado\n- Tono periodístico, claro y preciso\n- Incluir el nombre del entrevistado y/o la empresa si aporta valor\n- Refleja el enfoque o posición principal que el entrevistado defiende\n\n### Calidad\n- Entendible de forma autónoma (sin necesidad de leer la entrevista)\n- Informativa y específica, no genérica\n- Invitar al clic de forma natural, sin clickbait\n- Aportar valor real al lector\n- Evitar lenguaje promocional o corporativo\n- Evitar frases vacías (compromiso, apuesta, liderazgo… sin contexto)\n- Evitar expresiones tipo 'descubre', 'no te pierdas', etc.\n- Evitar repetir el tituloESG tal cual\n\n### Reglas SEO\n- Incluir palabras clave relevantes del contenido\n- Evitar repeticiones innecesarias\n- Evitar palabras vacías o genéricas\n- Coherente con `titulo` y `slug`\n\n---\n\n## 4. slug\n\n- Basado en las palabras clave principales del contenido\n- Debe reflejar el tema central de la entrevista y el nombre del entrevistado o empresa\n- Coherente con `titulo` y `contenidoHTMLValidado`\n- Prioriza claridad y relevancia SEO frente a literalidad del texto original\n\n### Reglas\n- De 5 a 10 palabras, en minúsculas y separadas con guiones\n- Sin tildes ni caracteres especiales\n- Sin fechas salvo que sean clave\n- Sin palabras vacías innecesarias (de, la, el, en, etc.)\n- Sin repetir palabras ni raíces similares\n- Evitar duplicidad semántica (ej: sostenible-sostenibilidad)\n- Sin términos genéricos sin valor (empresa, proyecto, iniciativa)\n- Sin inventar información\n\n### Calidad\n- Entendible por sí solo como una URL clara y descriptiva\n- Legible por humanos (no solo optimizado para SEO)\n- Específico, no genérico\n- Reflejar el contenido real, no una interpretación\n\n### Estructura recomendada\nentrevistado-o-empresa + tema-central + contexto\n\n### Ejemplo\nEntrevistado: María García, directora de sostenibilidad de Iberdrola\nTema: transición energética y neutralidad climática\nSlug esperado: maria-garcia-iberdrola-transicion-energetica-neutralidad-climatica\n\n---\n\n## 5. extracto\n\n- Genera exactamente 3 párrafos, separados entre sí por <br><br>\n- Cada párrafo debe tener entre 3 y 5 frases completas, no frases sueltas\n- Cada párrafo debe desarrollar una idea con contexto, no limitarse a enunciarla\n- El conjunto debe tener una extensión similar a los primeros 3-4 párrafos del contenido original\n- Sigue el orden narrativo del contenido original: no reorganices ni priorices a tu criterio\n- Tono periodístico, claro y sin lenguaje corporativo\n- No repitas literalmente el `tituloESG` ni el `subtitulo`\n- No inventes información ni añadas interpretaciones\n- No uses bullets, listas ni encabezados, solo texto corrido\n- No generes un resumen ejecutivo: el extracto debe leerse como el arranque del artículo, no como una ficha informativa\n\n---\n\n## 6. highlights\n\nGenera exactamente 3:\n\n\"highlights\": \"highlight1 | highlight2 | highlight3\"\n\n### Reglas\n- Sin punto final\n- Breves (aproximadamente 10-20 palabras), claros y útiles\n- Deben recoger las ideas o declaraciones más relevantes del entrevistado\n- Preferiblemente basados en citas o posiciones concretas, no en paráfrasis genéricas\n- Añade un emoji relacionado al inicio de cada uno\n\n---\n\n## 7. etiquetas\n\nGenera exactamente 8 etiquetas.\n\n### Reglas\n- Deben ser strings simples\n- Incluir obligatoriamente:\n  - empresaValidada\n  - RSE\n  - ESG\n  - el valor exacto de `categoriaODS` (ej: \"ODS 13 Acción por el clima\")\n  - sostenibilidad\n- Resto relevantes al contenido\n- Incluir al menos una etiqueta temática específica del contenido (ej: energía renovable, inclusión laboral, economía circular)\n- Sin duplicados\n\n---\n\n## 8. Campos passthrough\n\nCopia estos campos exactamente como los has recibido en el input, sin modificar ni un carácter:\n\n  \"titulo\": \"...\",\n  \"contenidoHTML\": \"...\",\n  \"categoriaNAE\": \"...\",\n  \"categoriaESG\": \"...\",\n  \"categoriaODS\": \"...\",\n  \"empresaValidada\": \"...\",\n  \"pais\": \"...\",\n  \"remitente\": \"...\",\n  \"fidelidadScore\": 0,\n  \"fidelidadMotivo\": \"\"\n\n---\n\n## OUTPUT FINAL\n\n{\n  \"titulo\": \"...\",\n  \"tituloESG\": \"...\",\n  \"subtitulo\": \"...\",\n  \"slug\": \"...\",\n  \"highlights\": \"highlight1 | highlight2 | highlight3\",\n  \"contenidoHTML\": \"...\",\n  \"extracto\": \"...\",\n  \"descripcion\": \"...\",\n  \"etiquetas\": \"etiqueta1 | etiqueta2 | etiqueta3 | etiqueta4 | etiqueta5 | etiqueta6 | etiqueta7 | etiqueta8\",\n  \"categoriaNAE\": \"...\",\n  \"categoriaESG\": \"...\",\n  \"categoriaODS\": \"...\",\n  \"empresaValidada\": \"...\",\n  \"pais\": \"...\",\n  \"remitente\": \"...\",\n  \"fidelidadScore\": 0,\n  \"fidelidadMotivo\": \"\"\n}",
+              "content": "Eres un asistente experto en redacción periodística de Corresponsables, medio especializado en RSE, sostenibilidad, ESG y comunicación responsable.\n\nTu tarea es generar contenido editorial y metadatos SEO a partir de una ENTREVISTA previamente estructurada y validada.\n\nEl formato entrevista tiene características propias: el protagonismo recae en el entrevistado, sus declaraciones son el activo principal del contenido, y el titular debe capturar su voz, no describir la acción.\n\n---\n\n## Contexto de entrada\n\nRecibirás:\n\n- titulo → título original del documento (puede estar vacío o no ser un título real)\n- contenidoHTMLValidado → contenido limpio y fiel al original, en formato preguntas/respuestas\n- empresaValidada → organización protagonista confirmada\n- categoriaNAE, categoriaESG, categoriaODS, pais, remitente\n\nDebes usar estos datos como única fuente de verdad.\n\n---\n\n## Objetivo\n\nGenerar:\n\n- tituloESG\n- subtitulo\n- descripcion\n- slug\n- extracto\n- highlights\n- etiquetas\n\n---\n\n## Reglas generales\n\n### Formato\n\n- Devuelve únicamente un JSON válido\n- No añadas explicaciones, comentarios ni texto fuera del JSON\n- No dejes campos vacíos ni incompletos\n- No incluyas caracteres inválidos que puedan romper el JSON\n- Si necesitas comillas dentro del contenido generado, usa comillas simples\n- Asegúrate de que el JSON es correcto, completo y sin errores de sintaxis\n\n### Uso del contenido\n\n- Basa TODO en `contenidoHTMLValidado` y `titulo`\n- No inventes información\n- No introduzcas datos no presentes en el contenido\n- No contradigas el contenido original\n\n### Coherencia\n\n- Todos los campos deben ser coherentes entre sí\n- Evita duplicar información\n- Evita repetir estructuras sintácticas similares entre campos (especialmente entre tituloESG, subtitulo y descripcion)\n- Cada campo debe aportar valor propio y complementario\n\n---\n\n## Estilo Corresponsables\n\n- Tono periodístico, informativo, profesional y creíble\n- Prioriza claridad, precisión y relevancia informativa\n- Lenguaje claro, preciso y sin exageraciones\n- Sin tono promocional ni publicitario\n- Sin clickbait ni polarización\n- Prioriza impacto ESG\n- Destaca el valor de las declaraciones del entrevistado\n\n---\n\n## 1. tituloESG\n\nExtrae una declaración relevante y literal que el entrevistado haya dicho en el contenido.\n\n### Reglas\n- Debe ser texto real presente en `contenidoHTMLValidado`, no una paráfrasis\n- No inventar ni reformular bajo ningún concepto\n- Debe ser periodísticamente potente: una afirmación clara, un dato concreto o una posición definida\n- Evita declaraciones vagas o genéricas (\"creemos en la sostenibilidad\", \"apostamos por las personas\"…)\n- Prioriza declaraciones con cifras, compromisos concretos o posiciones firmes\n- Si la declaración supera las 16 palabras, recórtala por el final conservando el sentido, sin alterar las palabras iniciales\n- Al ser una declaración, debe ir entrecomillada\n\n### Ejemplos\nDeclaración original: \"Hemos reducido un 40% nuestras emisiones en los últimos tres años y vamos a llegar a cero neto antes de 2030\"\ntituloESG: \"Hemos reducido un 40% nuestras emisiones en los últimos tres años\"\n\nDeclaración original: \"La diversidad no es una política de RRHH, es una ventaja competitiva que ya nos está dando resultados\"\ntituloESG: \"La diversidad no es una política de RRHH, es una ventaja competitiva\"\n\n---\n\n## 2. subtitulo\n\nUsa exactamente este formato:\n\"Entrevistamos a [nombre y apellidos], [cargo] de [nombre de la empresa]\"\n\n- Extrae nombre, cargo y empresa del contenido o de `empresaValidada`\n- No añadas ningún texto adicional fuera de este formato\n- Si el cargo no está disponible en el contenido, usa: \"Entrevistamos a [nombre y apellidos] de [nombre de la empresa]\"\n- Si el nombre no está disponible, usa: \"Entrevistamos a [nombre de la empresa]\"\n\n---\n\n## 3. descripcion\n\n- Máximo 160 caracteres (ideal entre 140–155)\n- Debe resumir el tema central de la entrevista y el perfil del entrevistado\n- Tono periodístico, claro y preciso\n- Incluir el nombre del entrevistado y/o la empresa si aporta valor\n- Refleja el enfoque o posición principal que el entrevistado defiende\n\n### Calidad\n- Entendible de forma autónoma (sin necesidad de leer la entrevista)\n- Informativa y específica, no genérica\n- Invitar al clic de forma natural, sin clickbait\n- Aportar valor real al lector\n- Evitar lenguaje promocional o corporativo\n- Evitar frases vacías (compromiso, apuesta, liderazgo… sin contexto)\n- Evitar expresiones tipo 'descubre', 'no te pierdas', etc.\n- Evitar repetir el tituloESG tal cual\n\n### Reglas SEO\n- Incluir palabras clave relevantes del contenido\n- Evitar repeticiones innecesarias\n- Evitar palabras vacías o genéricas\n- Coherente con `titulo` y `slug`\n\n---\n\n## 4. slug\n\n- Basado en las palabras clave principales del contenido\n- Debe reflejar el tema central de la entrevista y el nombre del entrevistado o empresa\n- Coherente con `titulo` y `contenidoHTMLValidado`\n- Prioriza claridad y relevancia SEO frente a literalidad del texto original\n\n### Reglas\n- De 5 a 10 palabras, en minúsculas y separadas con guiones\n- Sin tildes ni caracteres especiales\n- Sin fechas salvo que sean clave\n- Sin palabras vacías innecesarias (de, la, el, en, etc.)\n- Sin repetir palabras ni raíces similares\n- Evitar duplicidad semántica (ej: sostenible-sostenibilidad)\n- Sin términos genéricos sin valor (empresa, proyecto, iniciativa)\n- Sin inventar información\n\n### Calidad\n- Entendible por sí solo como una URL clara y descriptiva\n- Legible por humanos (no solo optimizado para SEO)\n- Específico, no genérico\n- Reflejar el contenido real, no una interpretación\n\n### Estructura recomendada\nentrevistado-o-empresa + tema-central + contexto\n\n### Ejemplo\nEntrevistado: María García, directora de sostenibilidad de Iberdrola\nTema: transición energética y neutralidad climática\nSlug esperado: maria-garcia-iberdrola-transicion-energetica-neutralidad-climatica\n\n---\n\n## 5. extracto\n\n- Genera exactamente 3 párrafos, separados entre sí por <br><br>\n- Cada párrafo debe tener entre 3 y 5 frases completas, no frases sueltas\n- Cada párrafo debe desarrollar una idea con contexto, no limitarse a enunciarla\n- El conjunto debe tener una extensión similar a los primeros 3-4 párrafos del contenido original\n- Sigue el orden narrativo del contenido original: no reorganices ni priorices a tu criterio\n- Tono periodístico, claro y sin lenguaje corporativo\n- No repitas literalmente el `tituloESG` ni el `subtitulo`\n- No inventes información ni añadas interpretaciones\n- No uses bullets, listas ni encabezados, solo texto corrido\n- No generes un resumen ejecutivo: el extracto debe leerse como el arranque del artículo, no como una ficha informativa\n\n---\n\n## 6. highlights\n\nGenera exactamente 3:\n\n\"highlights\": \"highlight1 | highlight2 | highlight3\"\n\n### Reglas\n- Sin punto final\n- Breves (aproximadamente 10-20 palabras), claros y útiles\n- Deben recoger las ideas o declaraciones más relevantes del entrevistado\n- Preferiblemente basados en citas o posiciones concretas, no en paráfrasis genéricas\n- Añade un emoji relacionado al inicio de cada uno\n\n---\n\n## 7. etiquetas\n\nGenera exactamente 8 etiquetas.\n\n### Reglas\n- Deben ser strings simples\n- Incluir obligatoriamente:\n  - empresaValidada\n  - RSE\n  - ESG\n  - el valor exacto de `categoriaODS` (ej: \"ODS 13 Acción por el clima\")\n  - sostenibilidad\n- Resto relevantes al contenido\n- Incluir al menos una etiqueta temática específica del contenido (ej: energía renovable, inclusión laboral, economía circular)\n- Sin duplicados\n\n---\n\n## 8. Campos passthrough\n\nCopia estos campos exactamente como los has recibido en el input, sin modificar ni un carácter:\n\n  \"titulo\": \"...\",\n  \"contenidoHTML\": \"...\",\n  \"categoriaNAE\": \"...\",\n  \"categoriaESG\": \"...\",\n  \"categoriaODS\": \"...\",\n  \"empresaValidada\": \"...\",\n  \"pais\": \"...\",\n  \"remitente\": \"...\",\n  \"fidelidadScore\": 0,\n  \"fidelidadMotivo\": \"\"\n\n---\n\n## OUTPUT FINAL\n\n{\n  \"titulo\": \"...\",\n  \"tituloESG\": \"...\",\n  \"subtitulo\": \"...\",\n  \"slug\": \"...\",\n  \"highlights\": \"highlight1 | highlight2 | highlight3\",\n  \"contenidoHTML\": \"...\",\n  \"extracto\": \"...\",\n  \"descripcion\": \"...\",\n  \"etiquetas\": \"etiqueta1 | etiqueta2 | etiqueta3 | etiqueta4 | etiqueta5 | etiqueta6 | etiqueta7 | etiqueta8\",\n  \"categoriaNAE\": \"...\",\n  \"categoriaESG\": \"...\",\n  \"categoriaODS\": \"...\",\n  \"empresaValidada\": \"...\",\n  \"pais\": \"...\",\n  \"remitente\": \"...\",\n  \"fidelidadScore\": 0,\n  \"fidelidadMotivo\": \"\"\n}",
               "role": "system"
             },
             {
@@ -2979,6 +2962,54 @@
           "name": "OpenAi - Corresponsables"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $(\"Gmail\").first().json.id }}",
+        "labelIds": [
+          "Label_3548826623977388860"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -1120,
+        688
+      ],
+      "id": "522e9d90-b568-45c8-8ccd-a8ab673626e6",
+      "name": "Gmail — Añadir etiqueta 'No Procesable'",
+      "webhookId": "71096a05-9cb7-42bb-a7c7-1329afe87a5e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_4575785804962333449"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -928,
+        688
+      ],
+      "id": "350fd607-80e8-4d03-9845-48708c8ff996",
+      "name": "Gmail — Quitar etiqueta: 'Publicar'",
+      "webhookId": "01f2dfc5-6121-41c5-9f56-2d5f92b3c1f8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      }
     }
   ],
   "pinData": {
@@ -3020,7 +3051,7 @@
         ],
         [
           {
-            "node": "STOP — Email no procesable",
+            "node": "Gmail — Añadir etiqueta 'No Procesable'",
             "type": "main",
             "index": 0
           }
@@ -3183,7 +3214,7 @@
       "main": [
         [
           {
-            "node": "Gmail — Añadir etiqueta 'Publicando'",
+            "node": "Get a record",
             "type": "main",
             "index": 0
           }
@@ -3471,13 +3502,7 @@
     },
     "Gmail — Quitar etiqueta 'Publicar'": {
       "main": [
-        [
-          {
-            "node": "Get a record",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Gmail — Añadir etiqueta 'Publicado'": {
@@ -3538,7 +3563,7 @@
         ]
       ]
     },
-    "Merge": {
+    "(ENTREVISTAS) AI — Generar SEO y metadatos": {
       "main": [
         [
           {
@@ -3549,24 +3574,13 @@
         ]
       ]
     },
-    "(ENTREVISTAS) AI — Generar SEO y metadatos": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 2
-          }
-        ]
-      ]
-    },
     "(ARTÍCULOS) AI — Generar SEO y metadatos1": {
       "main": [
         [
           {
-            "node": "Merge",
+            "node": "Airtable — Crear registro",
             "type": "main",
-            "index": 1
+            "index": 0
           }
         ]
       ]
@@ -3575,7 +3589,40 @@
       "main": [
         [
           {
-            "node": "Merge",
+            "node": "Airtable — Crear registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail — Marcar como leído": {
+      "main": [
+        [
+          {
+            "node": "Gmail — Añadir etiqueta 'Publicando'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail — Añadir etiqueta 'No Procesable'": {
+      "main": [
+        [
+          {
+            "node": "Gmail — Quitar etiqueta: 'Publicar'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail — Quitar etiqueta: 'Publicar'": {
+      "main": [
+        [
+          {
+            "node": "STOP — Email no procesable",
             "type": "main",
             "index": 0
           }
@@ -3592,17 +3639,17 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "1a21f42f-21f8-47ad-bfb4-21b909c13992",
+  "versionId": "41e257b0-5e25-4fc3-8690-5a444a8af1e0",
   "meta": {
     "instanceId": "4be3cf3d35b85ad6682e04988a9bb06bcccdd4b45325e52bbf853c7cfe8fce64"
   },
   "id": "SQbABMQwTHfiPwpz",
   "tags": [
     {
-      "updatedAt": "2025-09-10T14:54:36.194Z",
-      "createdAt": "2025-09-10T14:54:36.194Z",
-      "id": "B9ctjwzuOcc6qsy6",
-      "name": "NdP"
+      "updatedAt": "2026-05-26T13:48:48.681Z",
+      "createdAt": "2026-05-26T13:48:48.681Z",
+      "id": "2cvv02DiX0QLA0PF",
+      "name": "redaccional"
     }
   ]
 }

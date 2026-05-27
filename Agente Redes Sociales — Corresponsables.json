@@ -3,6 +3,105 @@
   "nodes": [
     {
       "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "aa000001-0000-0000-0000-000000000001",
+              "leftValue": "={{ $json.data.createPost.__typename }}",
+              "rightValue": "PostActionSuccess",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c3de10aa-371f-454f-a9b7-6ff9c726bdb8",
+      "name": "🔀 IF — LinkedIn OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        496,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bb000001-0000-0000-0000-000000000001",
+              "leftValue": "={{ $json.data.createPost.__typename }}",
+              "rightValue": "PostActionSuccess",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "423638ea-9b09-4b1a-9dc1-d908c1f919c9",
+      "name": "🔀 IF — Facebook OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        912,
+        496
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cc000001-0000-0000-0000-000000000001",
+              "leftValue": "={{ $json.data.createPost.__typename }}",
+              "rightValue": "PostActionSuccess",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d1f1a70b-847d-4807-a421-c3db7cbe193a",
+      "name": "🔀 IF — X OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1328,
+        352
+      ]
+    },
+    {
+      "parameters": {
         "operation": "search",
         "base": {
           "__rl": true,
@@ -35,13 +134,13 @@
           ]
         }
       },
-      "id": "04b19f6a-756a-4ff1-891a-16682ad9d393",
+      "id": "0678bc1d-9147-4252-bad5-9985b997d3fe",
       "name": "📋 Airtable — Buscar pendientes",
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2,
       "position": [
-        -1024,
-        -240
+        -1232,
+        656
       ],
       "credentials": {
         "airtableTokenApi": {
@@ -60,7 +159,7 @@
         "messages": {
           "values": [
             {
-              "content": "Eres el redactor de LinkedIn de Corresponsables.com, medio líder en Iberoamérica sobre RSE, ESG, Sostenibilidad y ODS. Tu objetivo es generar posts que maximicen el engagement (likes, comentarios, comparticiones y clics) entre una audiencia profesional: Direcciones de RSE/Sostenibilidad y de comunicación corporativa.\n\nESTRUCTURA OBLIGATORIA:\n1. Primera línea: dato o afirmación de impacto en negrita unicode, sola, sin preámbulos. Si es una entrevista o artículo, puede ser una declaración, pero entonces debe ir entrecomillada. Idealmente, puedes usar el título recibido en el user prompt. Al final de esta línea añade: 👉 [URL]\n2. Pregunta retórica o contexto brevísimo (1-2 frases)\n3. Cuerpo: 3-4 puntos clave con emoji o flecha unicode delante \n   (🔹, 🌍, 📊, ➤, ➜, ▶, →, ⟶, ›, », ▷, ☛...)\n4. Si CATEGORÍA NAE es \"Entrevistas\": OBLIGATORIO mencionar al entrevistado, siempre que lo sepas. Nunca lo inventes. Extrae su nombre, cargo y empresa del SUBTÍTULO y añade una frase como: \"Así lo explica [nombre], [cargo] de [empresa].\"\n   Si CATEGORÍA NAE es \"Opinión\": OBLIGATORIO mencionar al autor, siempre que lo sepas. Nunca lo inventes. Extrae su nombre y cargo del SUBTÍTULO.\n   Si CATEGORÍA NAE es \"Noticias\": omite este punto completamente.\n5. CTA directo (pide compartir, comentar y/o reflexionar)\n6. Entre 5 y 7 hashtags al final, incluyendo siempre #Corresponsables #ESG #Sostenibilidad #RSE. Puedes guiarte por las etiquetas que recibes en el user prompt.\n\nESTILO:\n- Frases cortas. Párrafos de máximo 2-3 líneas con salto entre ellos\n- Lenguaje profesional pero dinámico, nunca excesivamente formal\n- Conecta con roles específicos cuando aplique: \"Si eres Dirse...\"\n- La primera línea escríbela en negrita unicode. Ejemplo:\n  \"𝗥𝗲𝗱𝘂𝗰𝗶𝗿 𝗹𝗮 𝗵𝘂𝗲𝗹𝗹𝗮 𝗱𝗲 𝗰𝗮𝗿𝗯𝗼𝗻𝗼 𝘆𝗮 𝗻𝗼 𝗲𝘀 𝗼𝗽𝗰𝗶𝗼𝗻𝗮𝗹. 👉 URL\"\n- Emojis como marcadores visuales, no decorativos (máximo 6)\n- Nunca uses \"En un mundo donde...\" ni cierres genéricos corporativos\n\nNORMAS ESTRICTAS:\n- Máximo 1.000 caracteres en total (incluyendo hashtags y URL)\n- Responde ÚNICAMENTE con el texto del post, sin explicaciones",
+              "content": "Eres el redactor de LinkedIn de Corresponsables.com, medio líder en Iberoamérica sobre RSE, ESG, Sostenibilidad y ODS. Tu objetivo es generar posts que maximicen el engagement (likes, comentarios, comparticiones y clics) entre una audiencia profesional: Direcciones de RSE/Sostenibilidad y de comunicación corporativa.\n\nESTRUCTURA OBLIGATORIA:\n1. Primera línea: dato o afirmación de impacto en negrita unicode, sola, sin preámbulos. Si es una entrevista o artículo, puede ser una declaración, pero entonces debe ir entrecomillada. Idealmente, puedes usar el título recibido en el user prompt. Al final de esta línea añade: 👉 [URL]\n2. Pregunta retórica o contexto brevísimo (1-2 frases)\n3. Cuerpo: 3-4 puntos clave con emoji o flecha unicode delante \n   (🔹, 🌍, 📊, ➤, ➜, ▶, →, ⟶, ›, », ▷, ☛...)\n4. Si CATEGORÍA NAE es \"Entrevistas\": OBLIGATORIO mencionar al entrevistado, siempre que lo sepas. Nunca lo inventes. Extrae su nombre, cargo y empresa del SUBTÍTULO y añade una frase como: \"Así lo explica [nombre], [cargo] de [empresa].\"\n   Si CATEGORÍA NAE es \"Opinión\": OBLIGATORIO mencionar al autor, siempre que lo sepas. Nunca lo inventes. Extrae su nombre y cargo del SUBTÍTULO.\n   Si CATEGORÍA NAE es \"Noticias\": omite este punto completamente.\n5. CTA directo (pide compartir, comentar y/o reflexionar)\n6. Entre 5 y 7 hashtags al final, incluyendo siempre #Corresponsables #ESG #Sostenibilidad #RSE. Puedes guiarte por las etiquetas que recibes en el user prompt.\n7. Finaliza con una frase tipo \"Sigue leyendo en @Corresponsables 👉 [URL]\"\n\nESTILO:\n- Frases cortas. Párrafos de máximo 2-3 líneas con salto entre ellos\n- Lenguaje profesional pero dinámico, nunca excesivamente formal\n- Conecta con roles específicos cuando aplique: \"Si eres Dirse...\"\n- La primera línea escríbela en negrita unicode. Ejemplo:\n  \"𝗥𝗲𝗱𝘂𝗰𝗶𝗿 𝗹𝗮 𝗵𝘂𝗲𝗹𝗹𝗮 𝗱𝗲 𝗰𝗮𝗿𝗯𝗼𝗻𝗼 𝘆𝗮 𝗻𝗼 𝗲𝘀 𝗼𝗽𝗰𝗶𝗼𝗻𝗮𝗹. 👉 URL\"\n- Emojis como marcadores visuales, no decorativos (máximo 6)\n- Nunca uses \"En un mundo donde...\" ni cierres genéricos corporativos\n\nNORMAS ESTRICTAS:\n- Máximo 1.000 caracteres en total (incluyendo hashtags y URL)\n- Responde ÚNICAMENTE con el texto del post, sin explicaciones",
               "role": "system"
             },
             {
@@ -70,13 +169,13 @@
         },
         "options": {}
       },
-      "id": "a3df0ef4-978c-4502-89c2-a2c3278e65ff",
+      "id": "538af472-44ac-46d7-b7d1-057160a49905",
       "name": "🤖 AI — Generar post redes sociales",
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1,
       "position": [
-        -16,
-        -272
+        -224,
+        640
       ],
       "credentials": {
         "openAiApi": {
@@ -89,13 +188,13 @@
       "parameters": {
         "jsCode": "// ============================================\n// EXTRAER TEXTO DEL POST GENERADO POR LA IA\n// ============================================\n// La API de OpenAI puede devolver la respuesta en dos formatos distintos\n// según la versión del modelo o del nodo n8n. Con ?? probamos el primero\n// y si viene vacío o undefined, automáticamente usamos el segundo.\nconst aiResponse = \n  $input.item.json.message?.content        // Formato nuevo (gpt-4o, gpt-4)\n  ?? $input.item.json.choices?.[0]?.message?.content  // Formato legacy (completions)\n  ?? '';                                   // Fallback: string vacío si falla todo\n\n// ============================================\n// LIMPIAR Y ESCAPAR EL TEXTO\n// ============================================\nconst postEscapado = aiResponse\n  .replace(/\\*\\*/g, '')        // Elimina asteriscos markdown (**texto**)\n  .replace(/\\\\/g, '\\\\\\\\')     // Escapa barras invertidas primero\n  .replace(/\"/g, '\\\\\"')       // Escapa comillas dobles para GraphQL\n  .replace(/\\n/g, '\\\\n')     // Escapa saltos de línea para GraphQL\n  .replace(/\\r/g, '\\\\r');    // Escapa retornos de carro para GraphQL\n\n// ============================================\n// OBTENER URL DE IMAGEN Y AUTOR DESDE WP\n// ============================================\n// El nodo WP puede devolver array o objeto directo, cubrimos ambos casos\nconst wpMedia = $('🖼️ WP — Obtener imagen destacada').item.json[0] \n  ?? $('🖼️ WP — Obtener imagen destacada').item.json;\n\n// URL permanente de la imagen destacada del post en WordPress\nconst imagenUrl = wpMedia.guid?.rendered ?? wpMedia.source_url ?? '';\n\n// Nombre del autor/entrevistado extraído del título del media en WP\nconst autor = wpMedia.title?.rendered ?? '';\n\n// ============================================\n// CONSTRUIR EL OBJETO DE SALIDA\n// ============================================\nreturn [{\n  json: {\n    // Texto limpio y escapado listo para publicar en redes y guardar en Airtable\n    linkedinPost: postEscapado,\n\n    // URL de la imagen destacada para adjuntar en Buffer\n    imagenUrl: imagenUrl,\n\n    // Nombre del autor o entrevistado\n    autor: autor,\n\n    // ID interno de Airtable para saber qué fila actualizar\n    airtableId: $('📋 Airtable — Buscar pendientes').item.json.id,\n\n    // Título del artículo para identificar la ejecución en el historial\n    titulo: $('📋 Airtable — Buscar pendientes').item.json['Título periodístico']\n  }\n}];;"
       },
-      "id": "0fb36c20-dad3-4e86-a39c-e375b72d89f2",
+      "id": "d23e1351-29dc-42ff-8740-547a9b29592f",
       "name": "⚙️ Code — Preparar datos post",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        288,
-        -272
+        80,
+        640
       ]
     },
     {
@@ -659,13 +758,13 @@
         },
         "options": {}
       },
-      "id": "d2207758-84d5-44c2-8e69-c1c4a50ec1a5",
+      "id": "adfadc4f-c45e-43ac-9770-19d95cfa5e51",
       "name": "💾 Airtable — Guardar URLs publicación",
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2,
       "position": [
-        1104,
-        -272
+        1520,
+        336
       ],
       "credentials": {
         "airtableTokenApi": {
@@ -702,41 +801,21 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -832,
-        -240
+        -1040,
+        656
       ],
-      "id": "f37783c3-367f-4d52-aff3-53784a3355c0",
+      "id": "79bf0e42-72b2-492f-b50d-db5a59044f6e",
       "name": "🔀 IF — Hay registros pendientes"
-    },
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "minutes",
-              "minutesInterval": 1
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.3,
-      "position": [
-        -1232,
-        -240
-      ],
-      "id": "a9eacf12-2827-462f-ae80-f854445018fb",
-      "name": "⏱️ Trigger — Cada 5 min"
     },
     {
       "parameters": {},
       "type": "n8n-nodes-base.limit",
       "typeVersion": 1,
       "position": [
-        -592,
-        -256
+        -800,
+        640
       ],
-      "id": "91b13b24-a1aa-48dc-af55-2fe0fb94ca8a",
+      "id": "c6093751-3a00-44f9-aa84-256a2c67255b",
       "name": "1️⃣ Limit — 1 artículo por ejecución"
     },
     {
@@ -750,7 +829,7 @@
           "parameters": [
             {
               "name": "query",
-              "value": "=mutation { createPost(input: { channelId: \"6a13eafdc687a22dd4231c45\", text: \"{{ $json.linkedinPost }}\", schedulingType: automatic, mode: shareNow, assets: [{ image: { url: \"{{ $json.imagenUrl }}\" } }] }) { ... on PostActionSuccess { post { id } } } }"
+              "value": "=mutation { createPost(input: { channelId: \"6a13eafdc687a22dd4231c45\", text: \"{{ $json.linkedinPost }}\", schedulingType: automatic, mode: shareNow, assets: [{ image: { url: \"{{ $json.imagenUrl }}\" } }] }) { __typename ... on PostActionSuccess { post { id } } ... on InvalidInputError { message } } }"
             }
           ]
         },
@@ -759,10 +838,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        496,
-        -272
+        288,
+        640
       ],
-      "id": "ec7b5787-0aa9-4604-b6bf-579dfc7d9af6",
+      "id": "389464b5-d19d-4b72-aa6e-6b53d237c6a5",
       "name": "🔵 Buffer — Publicar LinkedIn",
       "credentials": {
         "httpBearerAuth": {
@@ -792,9 +871,9 @@
       "typeVersion": 4.4,
       "position": [
         704,
-        -272
+        496
       ],
-      "id": "5123a2cb-f4fc-4baf-bea6-4858eefeeb3f",
+      "id": "ba842b8b-e5f4-487d-83d1-910956e3bc7f",
       "name": "🔵 Buffer — Publicar Facebook",
       "credentials": {
         "httpBearerAuth": {
@@ -823,10 +902,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        912,
-        -272
+        1136,
+        352
       ],
-      "id": "2da797f3-37d9-43a4-a729-379596624d9c",
+      "id": "46fc4d78-5aa5-4ebd-8dcb-a7d798ec9544",
       "name": "🔵 Buffer — Publicar X",
       "credentials": {
         "httpBearerAuth": {
@@ -843,10 +922,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -208,
-        -272
+        -416,
+        640
       ],
-      "id": "a175b0ca-81a7-4193-ada6-207ce983998e",
+      "id": "169d99c9-8565-4bec-b95e-44d5dd059b7f",
       "name": "🖼️ WP — Obtener imagen destacada"
     },
     {
@@ -868,10 +947,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -384,
-        -272
+        -592,
+        640
       ],
-      "id": "41e42423-83ca-40ec-8497-b772fcd21d69",
+      "id": "f39184f8-30b9-4bc4-955b-2fdc18dcba09",
       "name": "🔍 WP — Obtener ID imagen",
       "credentials": {
         "wordpressApi": {
@@ -879,10 +958,202 @@
           "name": "Wordpress - Corresponsables - API"
         }
       }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1440,
+        656
+      ],
+      "id": "24248dea-9bca-40b8-bca2-6db569104aec",
+      "name": "⏱️ Trigger — Cada 1 min"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "app5FkIV6cTNWoFeo",
+          "mode": "list",
+          "cachedResultName": "CMS Wordpress",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblVkszOGc9BXmwug",
+          "mode": "list",
+          "cachedResultName": "Publicaciones",
+          "cachedResultUrl": "https://airtable.com/app5FkIV6cTNWoFeo/tblVkszOGc9BXmwug"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('⚙️ Code — Preparar datos post').item.json.airtableId }}",
+            "Estado": "✅ Publicado en RRSS"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "🔁 Guardando Email",
+                  "value": "🔁 Guardando Email"
+                },
+                {
+                  "name": "🔎 En Revisión",
+                  "value": "🔎 En Revisión"
+                },
+                {
+                  "name": "✋🏼 Procesando",
+                  "value": "✋🏼 Procesando"
+                },
+                {
+                  "name": "✅ Borrador WP Creado",
+                  "value": "✅ Borrador WP Creado"
+                },
+                {
+                  "name": "✅ Publicado",
+                  "value": "✅ Publicado"
+                },
+                {
+                  "name": "✅ Publicado en RRSS",
+                  "value": "✅ Publicado en RRSS"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "df95a049-f963-49cd-b394-fe1200d258ee",
+      "name": "✅ Airtable — Actualizar Estado RRSS",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        1744,
+        336
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ilfdijSfllKn4Pnd",
+          "name": "Airtable PAT Jordi Puente"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "noticias@corresponsables.com",
+        "subject": "=⚠️ Error publicación RRSS — notificación del agente",
+        "message": "=<h2>Error al publicar en redes sociales</h2><p><strong>Artículo:</strong> {{ $('⚙️ Code — Preparar datos post').first().json.titulo }}</p><p><strong>Error:</strong> {{ $json.data.createPost.__typename }}</p><p><strong>Airtable ID:</strong> {{ $('⚙️ Code — Preparar datos post').first().json.airtableId }}</p><h3>Posibles causas</h3><ul><li><strong>Fallo puntual de Buffer</strong> — la API de Buffer tuvo un error temporal (UnexpectedError). Espera unos minutos y reintenta manualmente.</li><li><strong>Token de Buffer expirado</strong> — la conexión con LinkedIn, Facebook o X se ha desconectado en Buffer. Ve a Buffer → Settings → Channels y reconecta la red afectada.</li><li><strong>Canal desconectado o eliminado</strong> — el channelId ya no es válido. Verifica que el canal sigue activo en Buffer.</li><li><strong>URL de imagen inaccesible</strong> — la imagen destacada del post no era pública o estaba vacía. Buffer no pudo procesarla.</li><li><strong>Texto del post demasiado largo o con caracteres inválidos</strong> — el post generado por la IA supera el límite de caracteres de la red social o contiene caracteres que rompen la query GraphQL.</li><li><strong>Límite de publicaciones del plan de Buffer</strong> — se ha alcanzado el tope del plan contratado.</li><li><strong>Incidencia general en Buffer</strong> — consulta el estado en <a href=\"https://status.buffer.com\">status.buffer.com</a>.</li></ul><hr><p>Revisa el agente en n8n y republica manualmente si es necesario.</p>",
+        "options": {}
+      },
+      "id": "f6f151f6-226a-494f-8796-0e595a6767b0",
+      "name": "📧 Email — Alerta error RRSS",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1520,
+        656
+      ],
+      "webhookId": "781aeb3a-9165-4f6e-91a1-54d6c11f1fd8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iuJrkv2pPrDxhgDM",
+          "name": "Gmail - Noticias Corresponsables"
+        }
+      }
     }
   ],
   "pinData": {},
   "connections": {
+    "🔀 IF — LinkedIn OK?": {
+      "main": [
+        [
+          {
+            "node": "🔵 Buffer — Publicar Facebook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📧 Email — Alerta error RRSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔀 IF — Facebook OK?": {
+      "main": [
+        [
+          {
+            "node": "🔵 Buffer — Publicar X",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📧 Email — Alerta error RRSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔀 IF — X OK?": {
+      "main": [
+        [
+          {
+            "node": "💾 Airtable — Guardar URLs publicación",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📧 Email — Alerta error RRSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "📋 Airtable — Buscar pendientes": {
       "main": [
         [
@@ -905,22 +1176,33 @@
         ]
       ]
     },
-    "🔀 IF — Hay registros pendientes": {
+    "⚙️ Code — Preparar datos post": {
       "main": [
         [
           {
-            "node": "1️⃣ Limit — 1 artículo por ejecución",
+            "node": "🔵 Buffer — Publicar LinkedIn",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "⏱️ Trigger — Cada 5 min": {
+    "💾 Airtable — Guardar URLs publicación": {
       "main": [
         [
           {
-            "node": "📋 Airtable — Buscar pendientes",
+            "node": "✅ Airtable — Actualizar Estado RRSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔀 IF — Hay registros pendientes": {
+      "main": [
+        [
+          {
+            "node": "1️⃣ Limit — 1 artículo por ejecución",
             "type": "main",
             "index": 0
           }
@@ -938,22 +1220,11 @@
         ]
       ]
     },
-    "⚙️ Code — Preparar datos post": {
-      "main": [
-        [
-          {
-            "node": "🔵 Buffer — Publicar LinkedIn",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "🔵 Buffer — Publicar LinkedIn": {
       "main": [
         [
           {
-            "node": "🔵 Buffer — Publicar Facebook",
+            "node": "🔀 IF — LinkedIn OK?",
             "type": "main",
             "index": 0
           }
@@ -964,7 +1235,7 @@
       "main": [
         [
           {
-            "node": "🔵 Buffer — Publicar X",
+            "node": "🔀 IF — Facebook OK?",
             "type": "main",
             "index": 0
           }
@@ -975,7 +1246,7 @@
       "main": [
         [
           {
-            "node": "💾 Airtable — Guardar URLs publicación",
+            "node": "🔀 IF — X OK?",
             "type": "main",
             "index": 0
           }
@@ -1003,6 +1274,17 @@
           }
         ]
       ]
+    },
+    "⏱️ Trigger — Cada 1 min": {
+      "main": [
+        [
+          {
+            "node": "📋 Airtable — Buscar pendientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -1010,10 +1292,18 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "8ec0d85f-1a7d-479b-bd3f-9e643b733b31",
+  "versionId": "84e34418-0917-4f73-883c-f39eb9056bdd",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "4be3cf3d35b85ad6682e04988a9bb06bcccdd4b45325e52bbf853c7cfe8fce64"
   },
   "id": "SzNLlY1tdWSSAuoQ",
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2026-05-26T13:48:48.681Z",
+      "createdAt": "2026-05-26T13:48:48.681Z",
+      "id": "2cvv02DiX0QLA0PF",
+      "name": "redaccional"
+    }
+  ]
 }
